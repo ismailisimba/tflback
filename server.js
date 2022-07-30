@@ -1,6 +1,7 @@
 export {server as server};
-const serverURL = "https://expressongoogle-jzam6yvx3q-ey.a.run.app/";
-const paraOne = "test";
+//const serverURL = "https://expressongoogle-jzam6yvx3q-ey.a.run.app/";
+const serverURL = "http://127.0.0.1:8080"
+//const paraOne = "test";
 class server {
     
     constructor(){
@@ -10,15 +11,15 @@ class server {
     }
 }
 
-const fetchInfoWithFilter = async (data= {"def":"data"},funcAfter = (val)=>{console.log("default func"+val)})=>{
-    var myRequest = new Request(serverURL+"?paraOne="+paraOne+"?paraThree="+paraOne+"?paraFour="+paraOne);
-    await fetch({
-        method: 'GET', // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // no-cors, *cors, same-origin
+const fetchInfoWithFilter = async (data = JSON.stringify({"def":"data"}),paraOne="paraOne",funcAfter = (val)=>{console.log("default func"+val)})=>{
+    var myRequest = new Request(serverURL+"/"+paraOne);
+    await fetch(myRequest,{
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'no-cors', // no-cors, *cors, same-origin
         cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'omit', // include, *same-origin, omit
         headers: {
-          //'Content-Type': 'text/txt'
+          'Content-Type': 'text/txt'
           // 'Content-Type': 'application/x-www-form-urlencoded',
         },
         redirect: 'follow', // manual, *follow, error

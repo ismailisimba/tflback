@@ -10,7 +10,9 @@ const string1 = window.location.hostname.includes("ismailisimba.github.io") ? ""
   })().then(({cosmet,server})=>{
     const cosmetic = new cosmet.cosmetics();
     const backendServer = new server.server();
-    backendServer.startFetch();
+    backendServer.startFetch({"holla":"you"},"login",(r)=>{
+      console.log(r);
+    });
     cosmetic.start();
     
   });
