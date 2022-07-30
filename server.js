@@ -1,5 +1,5 @@
 export {server as server};
-//const serverURL = "https://expressongoogle-jzam6yvx3q-ey.a.run.app/";
+//const serverURL = "https://expressongoogle-jzam6yvx3q-ey.a.run.app";
 const serverURL = "http://127.0.0.1:8080"
 //const paraOne = "test";
 class server {
@@ -15,11 +15,11 @@ const fetchInfoWithFilter = async (data = JSON.stringify({"def":"data"}),paraOne
     var myRequest = new Request(serverURL+"/"+paraOne);
     await fetch(myRequest,{
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        mode: 'no-cors', // no-cors, *cors, same-origin
+        mode: 'cors', // no-cors, *cors, same-origin
         cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'omit', // include, *same-origin, omit
+        credentials: 'include', // include, *same-origin, omit
         headers: {
-          'Content-Type': 'text/txt'
+          'Content-Type': 'text/plain',
           // 'Content-Type': 'application/x-www-form-urlencoded',
         },
         redirect: 'follow', // manual, *follow, error

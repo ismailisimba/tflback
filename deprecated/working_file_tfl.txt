@@ -1,0 +1,13 @@
+hellothere69!*&
+
+
+ismizo2222
+ismizoadm12
+
+
+
+INSERT ismizo.PeopleExpress3.TFLAdmins (Name, Username, Password, AuthorisedSitesArr,Logs)
+VALUES('Ismaili', 'ismaadmin','isma@TF!22j',"bd332fa26efa03805f17b561df9c709d74463da368824a5b7dda8d549f49fa4cvMlfXVYp08GdcG0oFd/xR0nXIjop2aPAlwMlpH5O8/pcMyOZYD1zxJikbvC+EVJexlqTDxhmRbPIGOJgrP2N3g=="),
+      ('Vinay', 'vinaytfl','vnay@TF!22J',"8ed4c902fef6f95ba46a758c76399073b5262e8761849753242ab037cc60f17do/n58K5x2zRFnxJkIUe1BQOGGBzruWFcab07VklFlFcJDOXkFx6tl28LIMwHrYMiLuWWIi+3jHyEfFKunRupCw=="),
+      ('BK', 'bktfl','bkay@TF!22j',"fdc925d10ec69f43ddecc67e19851c3ad875c4b94e5d9af678734ea82aac45f50uIoXLTOAolyKcSc1fLx/DpWyi6DN/U2bzqdM2nD0hinA8Jr8CEeYEZAclt4mrJ5bzshZXIGepqTQBUpWyKPHQ=="),
+      ('Frida', 'fridatfl','frid@TF!22J',"705378ebd66cdf6986d2d795cbc2bb2936b111d8a10620b62f6e444f69109f535Zw12K70mB2mkvUWTtnn/48sZh+5w8oUKwzquEQzxrn2ZvkjBsx036U7/9z4KvO/TxWhEZ73MFXKYibS6p2RJg==")

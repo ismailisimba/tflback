@@ -1,3 +1,19 @@
+const string1 = window.location.hostname.includes("ismailisimba.github.io") ? "" : "";
+const backendServer ={};
+(async () => {
+      
+  const server = await import("./server.js");
+    
+    return {server};
+  })().then(({server})=>{
+    backendServer["cosmetics"] = new server.server();    
+  });
+
+
+
+
+
+
 export {cosmetics as cosmetics};
 
 class cosmetics {
@@ -53,15 +69,35 @@ class cosmetics {
             const uspass = document.getElementById("uspass").value;
             const mykeys = {"defkey":"0123pass",useKey:uspass};
 
-            
+            const passCheck = ()=>{
+              var returnVal = false;
+              if(uspass.length<6){
+                alert("Password must be at least 6 charachters")
+              }else {
+                returnVal= true;
+              }
+              return returnVal;
+             };
+              
+            if(usnum.length>1&&passCheck){
+              
+
+            var data ={"username":usnum,"pasData":uspass};
+            data=JSON.stringify({data});
+            //console.log(data);
+            //var encrypted = encrypt(data,uspass);
+            //console.log(encrypted);
+            //console.log(decrypt(encrypted,uspass));
 
 
-            const crypttest = encrypt(JSON.stringify({
-                name:usnum,
-                passplain:mykeys.useKey
-            }),uspass);
-        
-            console.log(crypttest);
+            backendServer.cosmetics.startFetch(data,"login",(r)=>{
+              console.log(r);
+            });
+
+            }else{
+              alert("Soemthing went wrong!")
+            }
+      
         
 
     }
