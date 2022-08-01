@@ -1,4 +1,5 @@
 const string1 = window.location.hostname.includes("ismailisimba.github.io") ? "" : "";
+const localVar = {};
 (async () => {
       
     
@@ -9,7 +10,17 @@ const string1 = window.location.hostname.includes("ismailisimba.github.io") ? ""
     return {cosmet,server};
   })().then(({cosmet,server})=>{
     const cosmetic = new cosmet.cosmetics();
+    const serve = new server.server();
     cosmetic.start();
+    serve.startFetch({},"checklogin",(r)=>{
+      const status = JSON.parse(r).cookieStatus;
+      if(status==="found"){
+        cosmetic.setStartStateIn();
+      }else{
+        alert("Please log in!");
+        cosmetic.setStartStateOut();
+      }
+    });
     
   });
 

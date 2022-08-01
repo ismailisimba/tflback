@@ -23,7 +23,8 @@ class cosmetics {
         this.addPassVisiEvent = this.addPassVisiEvent;
         this.addPassVisiEvent = this.addPassVisiEvent;
         this.checkForm = this.checkForm;
-        this.hailTheServerOnAllChannels = this.hailTheServerOnAllChannels;
+        this.setStartStateIn = this.setStartStateIn;
+        this.setStartStateOut = this.setStartStateOut;
     
         
     }
@@ -92,6 +93,7 @@ class cosmetics {
 
             backendServer.cosmetics.startFetch(data,"login",(r)=>{
               console.log(r);
+              this.setStartStateIn();
             });
 
             }else{
@@ -102,8 +104,37 @@ class cosmetics {
 
     }
 
-    hailTheServerOnAllChannels(){
+    setStartStateIn(){
+      document.body.querySelectorAll("section").forEach(ele=>ele.style.display="none");
+      document.querySelectorAll(".sec2")[0].style.display = "flex";
+      backendServer.cosmetics.startFetch(JSON.stringify({"hello":"there"}),"cars/all",(e)=>{this.fillCars(e)})
 
+    }
+
+    setStartStateOut(){
+      document.body.querySelectorAll("section").forEach(ele=>ele.style.display="none");
+      document.querySelectorAll(".sec1")[0].style.display = "flex";
+
+    }
+
+    fillCars (e) {
+      const cars = JSON.parse(e)?JSON.parse(e):"error reading cars";
+      console.log(cars);
+      const carContainer = document.querySelectorAll(".carmain")[0];
+      const carContainerMom = document.querySelectorAll(".sec2")[0].querySelectorAll(".content")[0];
+      document.querySelectorAll(".carmain").forEach(e=>e.remove());
+
+      cars.forEach(car=>{
+        console.log("circle complete...");
+        const tempEle = carContainer.cloneNode(true)
+        tempEle.querySelectorAll(".year")[0].innerText = car.YearOfMake;
+        tempEle.querySelectorAll(".brand")[0].innerText = car.BrandType1;
+        tempEle.querySelectorAll(".make")[0].innerText = car.Name1;
+        tempEle.querySelectorAll(".price")[0].innerText = car.PriceTZS?car.PriceTZS:"xxx";
+        tempEle.querySelectorAll(".prtype")[0].innerText = "TZS";
+        carContainerMom.appendChild(tempEle);
+
+      })
     }
 
 }

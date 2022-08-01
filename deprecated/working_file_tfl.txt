@@ -4,6 +4,18 @@ hellothere69!*&
 ismizo2222
 ismizoadm12
 
+--DONE--through GCLOUD QUERY--create account
+--DOING....---log in
+	--comparePassInserverandReturnAnswerAndCookiEOrNotAndStartSessionOrNot
+user(admin later)
+upload cars
+upload featured images
+view cars
+view featured images
+send emails
+
+
+
 
 
 INSERT ismizo.PeopleExpress3.TFLAdmins (Name, Username, Password, AuthorisedSitesArr,Logs)
