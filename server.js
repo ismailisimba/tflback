@@ -11,7 +11,7 @@ class server {
     }
 }
 
-const fetchInfoWithFilter = async (data = JSON.stringify({"def":"data"}),paraOne="paraOne",funcAfter = (val)=>{console.log("default func"+val)})=>{
+const fetchInfoWithFilter = async (data = JSON.stringify({"def":"data"}),paraOne="paraOne",funcAfter = (val)=>{console.log("fetch succesful")})=>{
     var myRequest = new Request(serverURL+"/"+paraOne);
     await fetch(myRequest,{
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -25,11 +25,11 @@ const fetchInfoWithFilter = async (data = JSON.stringify({"def":"data"}),paraOne
         redirect: 'follow', // manual, *follow, error
         referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
         body: data // body data type must match "Content-Type" header
-      }).then(response=>{
+      }).then(async(response)=>{
         if (!response.ok){
             throw new Error("HTTP error, status = " + response.status); 
           }
-          return response.text();
+          return await response.text();
       }).then(res=>{
         funcAfter(res);
       }).catch(e=>{
@@ -37,3 +37,5 @@ const fetchInfoWithFilter = async (data = JSON.stringify({"def":"data"}),paraOne
     })
 
 }
+
+

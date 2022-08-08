@@ -17,6 +17,7 @@
 
   <body>
 
+
     <header>
         <div class="logo"><img src="./logo.png"></div>
         <h1>TFL Website Content Management System</h1>
@@ -37,11 +38,11 @@
             <button class="submitlogtfl">Submit</button>
         </div>
     </section>
+
     <section class="sec2">
       <ul class="menu">
-        <li>Vehicles</li>
-        <li>Pages and Promotions</li>
-        <li>Add Vehicles</li>
+        <li class="activemainmenu listitem vehi">Vehicles</li>
+        <li class="listitem promo">Pages and Promotions</li>
         <li id="lastmenu"><img src="./dot.png.webp" width="48px"></li>
         <li class="buttrow"><button id="logout">Logout</button></li>
     </ul>
@@ -49,13 +50,21 @@
       <div class="menutoo">
         <h1>Vehicles</h1>
         <div class="actions">
-          <div>Add</div>
-          <div>Edit</div>
-          <div>Delete</div>
+          <div class="actchild delete">Delete</div>
+          <div class="actchild edit">Edit</div>
+          <div class="actchild add">Add</div>
+          <div class="actchild view">View</div>
+        </div>
+      </div>
+      <div class="menutootoo">
+        <h1>Promotions and Offers</h1>
+        <div class="actions">
+          <div class="actchild edit">View</div>
         </div>
       </div>
       <div class="carmain">
-        <img src="./dot.png.webp">
+        <img class="afterlife" src="./dot.png.webp">
+        <img class="main"src="./dot.png.webp">
         <div class="cardeets">
           <div class="row">
             <div class="year">2001</div><div class="brand">Toyota</div><div class="make">Rav 4</div>
@@ -67,6 +76,7 @@
             <div class="transmish">Automatic</div><div class="mile">60000</div>
           </div>
         </div>
+        <img src="./icons/checkbox.png" width="36px" class="checky" id="">
       </div>
       <div class="carmain">
         <img src="./dot.png.webp">
@@ -126,7 +136,104 @@
       </div>
     </div>
 
+    <section class="sec3">
+      <div class="bookingmom">
+        <div class="bookingchild">
+           <h2>Add A Vehicle To TFL's Database</h2>
+           <p>Make sure you've filled out everything!</p>
+        </div>
+        <div class="bookingchild">
+         <h3>Vehicle Type</h3>
+         <select name="vehicletype" id="vehicletype">
+          <option value="def">--Please choose a vehicle type--</option>
+          <option value="car">Car, Small Truck, Bus, e.t.c</option>
+          <option value="bikemoto">Pikipiki, Motorbike, Bodaboda</option>
+          <option value="threew">Bajaja and Other Three Wheelers</option> 
+        </select>
+        </div>
+        <div class="bookingchild">
+          <h3>Vehicle Maker</h3>
+          <textarea maxlength="100" id="maker" placeholder="Toyota/Mercedez Benz/FIAT e.t.c"></textarea>
+         </div>
+         <div class="bookingchild">
+          <h3>Model Name</h3>
+          <textarea maxlength="100" id="model" placeholder="Rav-4/Maybach/Pajero e.t.c"></textarea>
+         </div>
+        <div class="bookingchild">
+         <h3>Year of Make</h3>
+         <div>
+          <label for="bookstart">dd/mm/yyyy</label>
+          <input type="date" id="birthdate" name="birthdate" value="2021">
+        </div>
+        </div>
+        <div class="bookingchild">
+          <h3>Price</h3>
+          <input type="number" id="price" name="price" min="0" step="100000" placeholder="0" style="width: auto !important; max-width: 52px; font-size: 12px; text-align: center;">
+        </div>
+        <div class="bookingchild">
+          <h3>Mileage</h3>
+          <input type="number" id="mileage" name="mileage" max="5000000" min="0" step="500" placeholder="0" style="width: auto !important; max-width: 52px; font-size: 12px; text-align: center;">
+        </div>
+        <div class="bookingchild">
+         <h3>Transmission</h3>
+         <select name="transtypes" id="transtypes">
+          <option value="def">--Please choose a plan--</option>
+          <option value="auto">Automatic Car</option>
+          <option value="manual">Manual Car</option>
+          <option value="automanual">Automatic and Manual Hybrid</option> 
+        </select>
+        </div>
+        <div class="bookingchild">
+          <h3>Upload up to five pictures (No more than 5 mbs each)</h3>
+          <input type="file" id="pictureuploads" multiple="" accept="image/png, image/jpeg">
+        </div>
+        <div class="bookingchild">
+          <h3>Vehicle Ameneties</h3>
+          <textarea maxlength="2500" id="ameneties" placeholder="AC/Music/Leather/Heating e.t.c"></textarea>
+         </div>
+         <button class="" id="carsubmit">Submit</button>
+      </div>
     </section>
+
+    <section class="sec4">
+      <div class="previewofpromo">
+        <img>
+        <div>
+          <h1>Hello There</h1>
+          <p>Hello There</p>
+          <button style="user-select:none;">Contact Us</button>
+        </div>
+      </div>
+      <div class="promoform">
+        <div class="bookingchild">
+          <h3>Title of Promo</h3>
+          <textarea maxlength="256" id="promotit" placeholder="70% Off All Services!"></textarea>
+         </div>
+         <div class="bookingchild">
+          <h3>Text Details</h3>
+          <textarea maxlength="2500" id="promoword" placeholder="Visit our services on holidays and weekends..."></textarea>
+         </div>
+         <div class="bookingchild">
+          <h3>Upload up a 1:1 (Square poster)</h3>
+          <input type="file" id="promopic" accept="image/png, image/jpeg">
+        </div>
+        <button id="submitpromo">Submit</button>
+      </div>
+    </section>
+
+    <button class="deletebutt" id="delete">Click Here To Delete Selected Cars</button>
+    
+    </section>
+      <div class="loading">
+       
+        <p><span>Action</span><span>...</span></p>
+
+        <img src="./icons/loading.gif">
+
+      </div>
+   
+    
+
     <footer>
 
     </footer>

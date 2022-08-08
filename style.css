@@ -1,6 +1,7 @@
 body{
     font-family: "Rajdhani";
     overflow-x: hidden;
+    width: 100%;
     letter-spacing: 1.69px;
     box-sizing: border-box;
 }
@@ -80,6 +81,7 @@ ul.menu{
     padding-top: 52px;
     left: 0px;
     height: 100vh;
+    z-index: 36;
 
     display: flex;
     flex-flow: column;
@@ -155,13 +157,13 @@ body .sec2{
     flex-flow: column;
     justify-content:flex-start;
     align-items: flex-start;
-    height: 100vh;
+    min-height: 100vh;
     position: absolute;
     width: 110%;
     left: -5%;
     top: 106px;
     box-sizing: border-box;
-    z-index: 10;
+    z-index: 65;
 }
 
 body .sec1 div {
@@ -209,7 +211,7 @@ button.submitlogtfl:hover{
     width: 60%;
     position: relative;
     left:35%;
-    top:24px;
+    top:48px;
     min-width: 600px;
     box-sizing: border-box;
     padding: 24px 12px;
@@ -236,6 +238,7 @@ button.submitlogtfl:hover{
     padding: 12px 12px;
     margin: 14px 10px;
     border-radius: 6px;
+    position: relative;
     cursor: pointer;
     border: .69px solid transparent;
     transition: all .32s ease-out;
@@ -312,12 +315,206 @@ button.submitlogtfl:hover{
   }
 
 
-  .menutoo{
-    position: absolute;
-    top: 0px;
+  .menutoo,.menutootoo{
+    background-color: white;
+    border-radius: 6px;
+    border: .34px dotted black;
+    box-sizing: border-box;
+    padding: 12px 18px;
+    width: 50%;
+    display: flex;
+    flex-flow: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 140px;
     margin: 0 auto;
+    z-index: 100;
+  }
+
+  .menutootoo{
+    display: none;
+  }
+
+  .actions{
+    display: flex;
+    cursor: pointer;
+    width: 50%;
+    flex-flow: row-reverse;
+    justify-content: space-evenly;
+    align-items: center;
+    transition: all 1s ease-in;
+  }
+
+  .actchild{
+    padding: 5px 7px;
+    box-sizing: border-box;
+  }
+
+  .actchild:hover{
+    color:white;
+    background-color: #284185;
   }
   
+
+
+  .sec3, .sec4{
+    display: none;
+    background-color: transparent;
+    width: 60%;
+    box-sizing: border-box;
+    padding-left: 269px;
+    position: relative;
+    top: 9px;
+    height: 1024px;
+    min-height: 269px;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    align-items: flex-start;
+    z-index: 35;
+  }
+
+  .previewofpromo{
+    display: flex;
+    flex-flow: row;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0px 23% 0px 29%;
+    margin-top: 48px;
+  }
+
+  .previewofpromo img{
+    background-color: #284185;
+    width: 120px;
+    min-height: 69px;
+  }
+
+
+  .bookingmom, .promoform{
+    font-family: "Rajdhani" !important;
+    margin: 48px auto;
+    position: relative;
+    min-width: 240px;
+    max-width: 669px;
+    width: 50%;
+    background-color: transparent;
+    border: .69px dotted black;
+    border-radius: 12px;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.bookingchild, .promoform .bookingchild{
+    font-family: "Rajdhani" !important;
+    text-align: center;
+    width: 85% !important;
+    margin-bottom: 12px;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+.bookingchild h2, .promoform .bookingchild h2{
+    font-family: "Rajdhani" !important;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 6px auto;
+    width: 100% !important;
+}
+.bookingchild p, .promoform .bookingchild p{
+font-family: Lexend !important;
+text-align: center;
+font-size: 13px;
+width: 100%;
+margin: 6px auto;
+}
+
+.bookingchild textarea, .promoform .bookingchild textarea{
+box-sizing: border-box;
+resize: none;
+width: 65%;
+height: 28px;
+font-family: Lexend !important;
+font-size: 12px;
+letter-spacing: 1.69px;
+font-weight: normal;
+}
+
+
+img.checky{
+    width: 28px !important;
+    background-image: none !important;
+    position: absolute;
+    top:-2px;
+    left:-2px;
+    display: none;
+}
+.activemainmenu{
+    border: .56px dashed white !important;
+}
+.deletebutt{
+    display: none;
+    background-color: #284185;
+    border-radius: 6px;
+    border: .69px dotted white;
+    box-sizing: border-box;
+    padding: 12px 18px;
+    width: 25%;
+    min-width: 120px;
+    position: fixed;
+    bottom: 140px;
+    right: 18px;
+    z-index: 100;
+
+}
+
+.deletebutt:hover{
+    border: .69px solid #284185;
+}
+
+
+img.afterlife{
+    display: block;
+    position: absolute;
+    top: 25%;
+    margin: 0 18%;
+    width: 64% !important;
+    background-image: none !important;
+    background-color: transparent !important;
+}
+
+
+.loading{
+    width: 100%;
+    height: 110vh;
+    background-color:white;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1000;
+    
+    display: none;
+    flex-flow: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    padding-top:198px;
+    box-sizing: border-box;
+}
+
+.loading p{
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: 1.69px;
+}
+
 
 @media screen and (min-width: 600px) {
     .half-width {
