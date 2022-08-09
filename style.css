@@ -447,6 +447,10 @@ letter-spacing: 1.69px;
 font-weight: normal;
 }
 
+input{
+    min-width: 140px;
+}
+
 
 img.checky{
     width: 28px !important;
