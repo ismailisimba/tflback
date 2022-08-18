@@ -1,4 +1,5 @@
 const string1 = window.location.hostname.includes("ismailisimba.github.io") ? "" : "";
+let AnImEaction = "idle...";
 const backendServer = {};
 backendServer["cosmetics"] = await (async () => {
       
@@ -43,15 +44,16 @@ const addVehicleMenuEventClicks = ()=>{
         document.getElementById("delete").style.display = "none"
       }else if(e.target.classList.contains("edit")){
         alert("Click the Car You Want To Edit");
-        addEditeventListeners();
         document.querySelectorAll(".carmain").forEach(e=>{e.style.display="block"});
         document.querySelectorAll(".sec3")[0].style.display="none";
         document.querySelectorAll(".checky").forEach(e=>{e.style.display="none"});
         document.getElementById("delete").style.display = "none";
         removeCheckyListeners();
+        addEditeventListeners();
       }else if(e.target.classList.contains("delete")){
         document.querySelectorAll(".carmain").forEach(e=>{e.style.display="block"});
         document.querySelectorAll(".checky").forEach(e=>{e.style.display="block"});
+        removeCheckyListeners();
         addCheckyListeners();
         document.getElementById("delete").style.display = "block";
         document.querySelectorAll(".sec3")[0].style.display="none";
@@ -68,18 +70,19 @@ const   fillCars = (e)=> {
   (async()=>{return await JSON.parse(e)})().then((cars)=>{
     //console.log(cars);
     
-  if(false/*cars.cookieStatus="none"*/){
-    //checkLogin(backendServer.cosmetics);
-
-  }else if(false/*isEmpty(cars)*/){
+  if(cars.cookieStatus&&cars.cookieStatus==="none"){
     checkLogin(backendServer.cosmetics);
-  }else{
+
+  }else if(isEmpty(cars)){
+    checkLogin(backendServer.cosmetics);
+  }else if(cars){
     const carContainer = document.querySelectorAll(".carmain")[0];
     const carContainerMom = document.querySelectorAll(".sec2")[0].querySelectorAll(".content")[0];
     document.querySelectorAll(".carmain").forEach(e=>e.remove());
-    //console.log(cars[0]);
-    localVar["cars"] = [cars[0]];
-    cars[0].forEach(car=>{
+    const carstoo=JSON.parse(cars);
+    //console.log(carstoo.rows[0]);
+    localVar["cars"] = [carstoo.rows[0]];
+    carstoo.rows[0].forEach(car=>{
       if(car.Type1!=="promo"){
         const tempEle = carContainer.cloneNode(true)
         tempEle.querySelectorAll(".year")[0].innerText = car.YearOfMake;
@@ -90,7 +93,9 @@ const   fillCars = (e)=> {
         tempEle.querySelectorAll(".checky")[0].id = car.tagsArray;
         tempEle.querySelectorAll(".checky")[0].classList.add(car.id);
         car.Picture1 = JSON.parse(car.Picture1);
-        tempEle.querySelectorAll(".main")[0].src =`data:${car.Picture1.fileInfo.meme};base64,${car.Picture1.fileData}`;
+        if(car.Picture1!==null){
+          tempEle.querySelectorAll(".main")[0].src =`data:${car.Picture1.fileInfo.meme};base64,${car.Picture1.fileData}`;
+        }
         carContainerMom.appendChild(tempEle);
       }
     });
@@ -98,6 +103,8 @@ const   fillCars = (e)=> {
     fillPromoPreview();
     checkForDeleted();
 
+  }else{
+    checkLogin(backendServer.cosmetics);
   }
   });
 }
@@ -181,11 +188,12 @@ class cosmetics {
 
     addLogoutEvent() {
       document.getElementById("logout").addEventListener("click",(e)=>{
-        startAnime("logging out");
+        AnImEaction = "logout";
+        startAnime();
         backendServer.cosmetics.startFetch(JSON.stringify({}),"logout",(r)=>{
           if(r["1"]==="succ");
           alert("logout is succesful!");
-          window.location.reload()
+          setStartStateOut();
         });
       })
     }
@@ -252,12 +260,9 @@ class cosmetics {
 
             var data ={"username":usnum,"pasData":uspass};
             data=JSON.stringify({data});
-            //console.log(data);
-            //var encrypted = encrypt(data,uspass);
-            //console.log(encrypted);
-            //console.log(decrypt(encrypted,uspass));
-
-              startAnime("loging in");
+            AnImEaction = "login";
+            stopAnime();
+              startAnime();
             backendServer.cosmetics.startFetch(data,"login",(r)=>{
               if(r["1"]==="succ");
               console.log("login is succesful...");
@@ -274,7 +279,8 @@ class cosmetics {
 
 
     async checkForm2(e){
-      startAnime("Adding Car");
+      startAnime();
+      AnImEaction = "uploading car...";
       const type = document.getElementById("vehicletype").value;
       const maker = document.getElementById("maker").value;
       const model = document.getElementById("model").value;
@@ -283,6 +289,7 @@ class cosmetics {
       const mileage = document.getElementById("mileage").value;
       const transmission = document.getElementById("transtypes").value;
       const pictures = document.getElementById("pictureuploads").files;
+      console.log(pictures);
       const ameneties = document.getElementById("ameneties").value;
 
       const myCarObj ={type,maker,model,date,price,mileage,transmission,pictures,ameneties};
@@ -299,7 +306,8 @@ class cosmetics {
     }
 
     async checkForm3(e){
-      startAnime("Deleting");
+      startAnime();
+      AnImEaction = "deleting ...";
       const selected = document.querySelectorAll(".checked");
       const obj = {};
       var counter = 0;
@@ -321,7 +329,8 @@ class cosmetics {
 
 
     async checkForm4(e){
-      startAnime("Updating Promo")
+      AnImEaction = "updating promo...";
+      startAnime();
       const promotit = document.getElementById("promotit").value;
       const promoword = document.getElementById("promoword").value;
       const promopic = document.getElementById("promopic").files[0];
@@ -354,39 +363,42 @@ const addCheckyListeners = ()=>{
 
 const addEditeventListeners = ()=>{
   document.querySelectorAll(".carmain").forEach(ele=>{
-    ele.addEventListener("click",(e)=>{
-      e.stopPropagation();
-      const id = e.target.parentNode.querySelectorAll(".checky")[0].id;
-      //console.log(localVar.cars[0][0]);
-      for(let i = 0; i< localVar.cars[0].length;i++){
-        if(localVar.cars[0][i].tagsArray===id){
-          console.log(localVar.cars[0][i]);
-          removeCheckyListeners();
-          //console.log("true");
-          document.querySelectorAll(".carmain").forEach(e=>{e.style.display="none"});
-          document.querySelectorAll(".sec3")[0].style.display="flex";
-          document.querySelectorAll(".checky").forEach(e=>{e.style.display="none"});
-          document.getElementById("delete").style.display = "none";
-
-          document.querySelectorAll("#vehicletype")[0].value = localVar.cars[0][i].Type1;
-          document.querySelectorAll("#maker")[0].value = localVar.cars[0][i].BrandType1;
-          document.querySelectorAll("#model")[0].value = localVar.cars[0][i].Name1;
-          document.querySelectorAll("#birthdate")[0].value = localVar.cars[0][i].YearOfMake;
-          document.querySelectorAll("#price")[0].value = localVar.cars[0][i].PriceTZS;
-          document.querySelectorAll("#mileage")[0].value = localVar.cars[0][i].Mileage;
-          document.querySelectorAll("#transtypes")[0].value = localVar.cars[0][i].TransmissionType;
-          document.querySelectorAll("#ameneties")[0].value = localVar.cars[0][i].AmenetiesArray;
-          break
-        }
-      }
-    })
+    ele.addEventListener("click",addEditClicks)
   })
+}
+
+const addEditClicks = (e)=>{
+  e.stopPropagation();
+  const id = e.target.parentNode.querySelectorAll(".checky")[0].id;
+  //console.log(localVar.cars[0][0]);
+  for(let i = 0; i< localVar.cars[0].length;i++){
+    if(localVar.cars[0][i].tagsArray===id){
+      console.log(localVar.cars[0][i]);
+      removeCheckyListeners();
+      //console.log("true");
+      document.querySelectorAll(".carmain").forEach(e=>{e.style.display="none"});
+      document.querySelectorAll(".sec3")[0].style.display="flex";
+      document.querySelectorAll(".checky").forEach(e=>{e.style.display="none"});
+      document.getElementById("delete").style.display = "none";
+
+      document.querySelectorAll("#vehicletype")[0].value = localVar.cars[0][i].Type1;
+      document.querySelectorAll("#maker")[0].value = localVar.cars[0][i].BrandType1;
+      document.querySelectorAll("#model")[0].value = localVar.cars[0][i].Name1;
+      document.querySelectorAll("#birthdate")[0].value = localVar.cars[0][i].YearOfMake;
+      document.querySelectorAll("#price")[0].value = localVar.cars[0][i].PriceTZS;
+      document.querySelectorAll("#mileage")[0].value = localVar.cars[0][i].Mileage;
+      document.querySelectorAll("#transtypes")[0].value = localVar.cars[0][i].TransmissionType;
+      document.querySelectorAll("#ameneties")[0].value = localVar.cars[0][i].AmenetiesArray;
+      break
+    }
+  }
 }
 
 
 const removeCheckyListeners = ()=>{
   document.querySelectorAll(".carmain").forEach(ele=>{
     ele.removeEventListener("click",deleClicksAdded);
+    ele.removeEventListener("click",addEditClicks);
   })
 };
 
@@ -457,7 +469,9 @@ function decrypt (transitmessage, pass) {
 
 
 const checkLogin = async(s)=>{
-  startAnime("loging in");
+  AnImEaction = "loging in...";
+  stopAnime();
+  startAnime();
   s.startFetch(JSON.stringify({}),"checklogin",(e)=>{
     e=JSON.parse(e);
     
@@ -466,10 +480,12 @@ const checkLogin = async(s)=>{
         alert("Please Log In");
         setStartStateOut();
       }else if(e.cookieStatus==="found"){
-        stopAnime();
+        //stopAnime();
         setStartStateIn();
       }else{
         stopAnime();
+        alert("Please Log In");
+        setStartStateOut();
       }
  
     //console.log(e);
@@ -544,18 +560,20 @@ parsedFile =  await toBinaryString(file);
 const  setStartStateIn = ()=>{
   document.body.querySelectorAll("section").forEach(ele=>ele.style.display="none");
   document.querySelectorAll(".sec2")[0].style.display = "flex";
-  startAnime("Getting files");
+  stopAnime();
+  AnImEaction = "Getting files";
+  startAnime();
   backendServer.cosmetics.startFetch(JSON.stringify({"hello":"there"}),"cars/all",(e)=>{fillCars(e)})
 
 }
 
 
 
-const startAnime = (action)=>{
+const startAnime = ()=>{
   const box = document.querySelectorAll(".loading")[0];
   const textbox = box.querySelectorAll("span")[0];
   box.style.display = "flex";
-  textbox.innerText = action;
+  textbox.innerText = AnImEaction;
 }
 
 
