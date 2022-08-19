@@ -71,19 +71,19 @@ const   fillCars = (e)=> {
     //console.log(cars);
     
   if(cars.cookieStatus&&cars.cookieStatus==="none"){
-    checkLogin(backendServer.cosmetics);
+    setStartStateOut();
 
   }else if(isEmpty(cars)){
-    checkLogin(backendServer.cosmetics);
-  }else if(cars){
+    setStartStateOut();
+  }else{
     const carContainer = document.querySelectorAll(".carmain")[0];
     const carContainerMom = document.querySelectorAll(".sec2")[0].querySelectorAll(".content")[0];
     document.querySelectorAll(".carmain").forEach(e=>e.remove());
-    //console.log(JSON.parse(cars));
+    //console.log(cars.length);
     const carstoo=JSON.parse(cars);
-    //console.log(carstoo.rows[0]);
-    localVar["cars"] = [carstoo[0]];
-    carstoo[0].forEach(car=>{
+   // console.log(carstoo);
+    localVar["cars"] = [carstoo];
+    carstoo.forEach(car=>{
       if(car.Type1!=="promo"){
         const tempEle = carContainer.cloneNode(true)
         tempEle.querySelectorAll(".year")[0].innerText = car.YearOfMake;
@@ -103,9 +103,6 @@ const   fillCars = (e)=> {
     addVehicleMenuEventClicks();
     fillPromoPreview();
     checkForDeleted();
-
-  }else{
-    checkLogin(backendServer.cosmetics);
   }
   });
 }
@@ -265,9 +262,13 @@ class cosmetics {
             
               startAnime();
             backendServer.cosmetics.startFetch(data,"login",(r)=>{
-              if(r["1"]==="succ");
+              if(r["1"]==="succ"){
+                
               console.log("login is succesful...");
               setStartStateIn();
+              }else{
+                setStartStateOut();
+              }
             });
 
             }else{
@@ -473,8 +474,9 @@ const checkLogin = async(s)=>{
   AnImEaction = "loging in...";
   startAnime();
   s.startFetch(JSON.stringify({}),"checklogin",(e2)=>{
+    console.log(e2);
     const e=JSON.parse(e2);
-    console.log(e);
+    
     
       if(e.cookieStatus==="none"){
         alert("Please Log In");
