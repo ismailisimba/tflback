@@ -25,13 +25,10 @@ const setStartStateOut = ()=>{
 
 
 const addVehicleMenuEventClicks = ()=>{
-  //console.log("gg");
   document.querySelectorAll(".actchild").forEach((e)=>{
     e.addEventListener("click",(e)=>{
-      //console.log(e.target.classList);
       if(e.target.classList.contains("add")){
         removeCheckyListeners();
-        //console.log("true");
         document.querySelectorAll(".carmain").forEach(e=>{e.style.display="none"});
         document.querySelectorAll(".sec3")[0].style.display="flex";
         document.querySelectorAll(".checky").forEach(e=>{e.style.display="none"});
@@ -66,9 +63,8 @@ const addVehicleMenuEventClicks = ()=>{
 
 const   fillCars = (e)=> {
   stopAnime();
-  //const cars = JSON.parse(e);
+  
   (async()=>{return e;})().then((cars)=>{
-    //console.log(cars);
     
   if(cars.cookieStatus&&cars.cookieStatus==="none"){
     setStartStateOut();
@@ -79,11 +75,11 @@ const   fillCars = (e)=> {
     const carContainer = document.querySelectorAll(".carmain")[0];
     const carContainerMom = document.querySelectorAll(".sec2")[0].querySelectorAll(".content")[0];
     document.querySelectorAll(".carmain").forEach(e=>e.remove());
-    //console.log(cars.length);
+    
     const carstoo=JSON.parse(cars);
-   // console.log(carstoo);
-    localVar["cars"] = [carstoo];
-    carstoo.forEach(car=>{
+    //console.log(carstoo);
+    localVar["cars"] = [carstoo[0]];
+    carstoo[0].forEach(car=>{
       if(car.Type1!=="promo"){
         const tempEle = carContainer.cloneNode(true)
         tempEle.querySelectorAll(".year")[0].innerText = car.YearOfMake;
@@ -93,9 +89,13 @@ const   fillCars = (e)=> {
         tempEle.querySelectorAll(".prtype")[0].innerText = "TZS";
         tempEle.querySelectorAll(".checky")[0].id = car.tagsArray;
         tempEle.querySelectorAll(".checky")[0].classList.add(car.id);
-        car.Picture1 = JSON.parse(car.Picture1);
-        if(car.Picture1!==null){
+        if(car.Picture1!==null&&car.Picture1!==undefined){
+          console.log("filled in pic");
+          car.Picture1 = JSON.parse(car.Picture1);
           tempEle.querySelectorAll(".main")[0].src =`data:${car.Picture1.fileInfo.meme};base64,${car.Picture1.fileData}`;
+        }else{
+          getPictures(car);
+          console.log("didnt filled in pic");
         }
         carContainerMom.appendChild(tempEle);
       }
@@ -108,10 +108,94 @@ const   fillCars = (e)=> {
 }
 
 
+
+
+async function getPictures(car={"car":"isEmpty"}){
+  console.log(car);   
+  await getMyCarPics(car.tagsArray).then((res)=>{
+    const keys = Object.keys(res[0][0]["f0_"]);
+    var counter = 1;
+    keys.forEach(key=>{
+      if(res[0][0]["f0_"][key]!==null&&res[0][0]["f0_"][key]!=="null"){
+        localVar.cars.forEach(v=>{
+          if(v.tagsArray===car.tagsArray){
+            v["Picture"+counter] = res[0][0]["f0_"][key];
+            counter++;
+          }
+        })
+        res[0][0]["f0_"][key] = JSON.parse(res[0][0]["f0_"][key]);
+        const disimg = document.getElementById(car.tagsArray).parentNode.querySelectorAll(".main")[0];
+        disimg.src= `data:${res[0][0]["f0_"][key].fileInfo.meme};base64,${res[0][0]["f0_"][key].fileData}`;
+      }else{
+        console.log(res);
+      }
+    })
+    counter = 1;
+   })
+    
+}
+
+
+
+async function getMyCarPics(para=""){
+  //const reqString = "http://127.0.0.1:8080/tflcarspics?paraOne="+para;
+  const reqString = "https://expressongoogle-jzam6yvx3q-ez.a.run.app/tflcarspics?paraOne="+para;
+
+      
+  
+    var myRequest = new Request(reqString);
+    
+  
+         
+    const returnVal = await fetch(myRequest, {
+      method: 'GET', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'omit', // include, *same-origin, omit
+      headers: {
+        //'Content-Type': 'text/txt'
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    })
+          .then(function(response) {
+            if (!response.ok) {
+              
+              throw new Error("HTTP error, status = " + response.status);
+              
+            }
+            
+            return response.text();
+          })
+          .then(function(myBlob) {
+            
+            var cloudObject = JSON.parse(myBlob);
+            //window.location.href = "./";
+            return cloudObject;
+            
+          })
+          .catch(function(error) {
+            console.log(error.message);
+          });
+  
+          
+         // document.querySelectorAll(".mycolumns")[1].innerHTML = returnVal;
+          return returnVal; 
+  
+      // tempDiv.innerHTML = Object.entries(localVar.values)[0][1][3] ;  
+  }
+
+
+
+
+
+
+
 const fillPromoPreview = ()=>{
   for(let i = 0; i< localVar.cars[0].length;i++){
-    if(localVar.cars[0][i].Type1==="promo"){
-      const pic =  JSON.parse(localVar.cars[0][i].Picture1);
+    if(localVar.cars[0][i].Type1==="promo"&&localVar.cars[0][i].Picture1!==null&&localVar.cars[0][i].Picture1!==undefined){
+      const pic = JSON.parse(localVar.cars[0][i].Picture1);
       document.querySelectorAll(".previewofpromo")[0].querySelectorAll("h1")[0].innerText = localVar.cars[0][i].Name1;
       document.querySelectorAll(".previewofpromo")[0].querySelectorAll("p")[0].innerText = localVar.cars[0][i].BrandType1;
       document.querySelectorAll(".previewofpromo")[0].querySelectorAll("img")[0].src =`data:${pic.fileInfo.meme};base64,${pic.fileData}`;
@@ -202,7 +286,6 @@ class cosmetics {
             if(!e.target.classList.contains("activemainmenu")&&e.target.classList.contains("vehi")){
               document.querySelectorAll(".promo")[0].classList.remove("activemainmenu");
               document.querySelectorAll(".vehi")[0].classList.add("activemainmenu");
-              //console.log("vehi");
               document.querySelectorAll(".menutoo")[0].style.display = "flex";
               document.querySelectorAll(".menutootoo")[0].style.display = "none";
               document.querySelectorAll(".carmain").forEach(car=>{car.style.display="block"});
@@ -210,7 +293,6 @@ class cosmetics {
             }else if(!e.target.classList.contains("activemainmenu")&&e.target.classList.contains("promo")){
               document.querySelectorAll(".vehi")[0].classList.remove("activemainmenu");
               document.querySelectorAll(".promo")[0].classList.add("activemainmenu");
-              //console.log("promo");
               document.querySelectorAll(".menutoo")[0].style.display = "none";
               document.querySelectorAll(".menutootoo")[0].style.display = "flex";
               document.querySelectorAll(".carmain").forEach(car=>{car.style.display="none"});
@@ -262,12 +344,15 @@ class cosmetics {
             
               startAnime();
             backendServer.cosmetics.startFetch(data,"login",(r)=>{
+              console.log(r+"did is rrr....")
               if(r["1"]==="succ"){
                 
               console.log("login is succesful...");
               setStartStateIn();
               }else{
                 setStartStateOut();
+                console.log("iran");
+                console.log()
               }
             });
 
@@ -382,7 +467,7 @@ const addEditClicks = (e)=>{
       document.querySelectorAll(".sec3")[0].style.display="flex";
       document.querySelectorAll(".checky").forEach(e=>{e.style.display="none"});
       document.getElementById("delete").style.display = "none";
-
+      document.querySelectorAll(".editpicsmom")[0].style.display = "flex";
       document.querySelectorAll("#vehicletype")[0].value = localVar.cars[0][i].Type1;
       document.querySelectorAll("#maker")[0].value = localVar.cars[0][i].BrandType1;
       document.querySelectorAll("#model")[0].value = localVar.cars[0][i].Name1;
