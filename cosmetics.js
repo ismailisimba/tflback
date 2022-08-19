@@ -16,7 +16,7 @@ backendServer["cosmetics"] = await (async () => {
 
 
 const setStartStateOut = ()=>{
-  
+  stopAnime();
     document.body.querySelectorAll("section").forEach(ele=>ele.style.display="none");
     document.querySelectorAll(".sec1")[0].style.display = "flex";
 
@@ -261,7 +261,7 @@ class cosmetics {
             var data ={"username":usnum,"pasData":uspass};
             data=JSON.stringify({data});
             AnImEaction = "login";
-            stopAnime();
+            
               startAnime();
             backendServer.cosmetics.startFetch(data,"login",(r)=>{
               if(r["1"]==="succ");
@@ -470,20 +470,16 @@ function decrypt (transitmessage, pass) {
 
 const checkLogin = async(s)=>{
   AnImEaction = "loging in...";
-  stopAnime();
   startAnime();
   s.startFetch(JSON.stringify({}),"checklogin",(e)=>{
     e=JSON.parse(e);
     
       if(e.cookieStatus==="none"){
-        stopAnime();
         alert("Please Log In");
         setStartStateOut();
       }else if(e.cookieStatus==="found"){
-        //stopAnime();
         setStartStateIn();
       }else{
-        stopAnime();
         alert("Please Log In");
         setStartStateOut();
       }
