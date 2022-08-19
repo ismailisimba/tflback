@@ -67,7 +67,7 @@ const addVehicleMenuEventClicks = ()=>{
 const   fillCars = (e)=> {
   stopAnime();
   //const cars = JSON.parse(e);
-  (async()=>{return await JSON.parse(e)})().then((cars)=>{
+  (async()=>{return e;})().then((cars)=>{
     //console.log(cars);
     
   if(cars.cookieStatus&&cars.cookieStatus==="none"){
@@ -79,10 +79,11 @@ const   fillCars = (e)=> {
     const carContainer = document.querySelectorAll(".carmain")[0];
     const carContainerMom = document.querySelectorAll(".sec2")[0].querySelectorAll(".content")[0];
     document.querySelectorAll(".carmain").forEach(e=>e.remove());
+    //console.log(JSON.parse(cars));
     const carstoo=JSON.parse(cars);
     //console.log(carstoo.rows[0]);
-    localVar["cars"] = [carstoo.rows[0]];
-    carstoo.rows[0].forEach(car=>{
+    localVar["cars"] = [carstoo[0]];
+    carstoo[0].forEach(car=>{
       if(car.Type1!=="promo"){
         const tempEle = carContainer.cloneNode(true)
         tempEle.querySelectorAll(".year")[0].innerText = car.YearOfMake;
@@ -471,8 +472,9 @@ function decrypt (transitmessage, pass) {
 const checkLogin = async(s)=>{
   AnImEaction = "loging in...";
   startAnime();
-  s.startFetch(JSON.stringify({}),"checklogin",(e)=>{
-    e=JSON.parse(e);
+  s.startFetch(JSON.stringify({}),"checklogin",(e2)=>{
+    const e=JSON.parse(e2);
+    console.log(e);
     
       if(e.cookieStatus==="none"){
         alert("Please Log In");
