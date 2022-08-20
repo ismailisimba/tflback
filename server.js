@@ -20,7 +20,9 @@ const fetchInfoWithFilter = async (data = JSON.stringify({"def":"data"}),paraOne
         cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'include', // include, *same-origin, omit
         headers: {
+          //'Access-Control-Allow-Headers':'x-requested-with, Content-Type, origin, authorization, accept, client-security-token',
           'Content-Type': 'text/plain',
+          //'Access-Control-Allow-Origin':'http://127.0.0.1:8080'
           // 'Content-Type': 'application/x-www-form-urlencoded',
         },
         redirect: 'follow', // manual, *follow, error

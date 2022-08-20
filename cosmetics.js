@@ -1,4 +1,6 @@
-const string1 = window.location.hostname.includes("ismailisimba.github.io") ? "" : "";
+const picCont = document.querySelectorAll(".editpics")[0];
+
+      picCont.remove();
 let AnImEaction = "idle...";
 const backendServer = {};
 backendServer["cosmetics"] = await (async () => {
@@ -27,14 +29,24 @@ const setStartStateOut = ()=>{
 const addVehicleMenuEventClicks = ()=>{
   document.querySelectorAll(".actchild").forEach((e)=>{
     e.addEventListener("click",(e)=>{
+        document.querySelectorAll(".actchild").forEach(e=>{e.classList.remove("active")});
+        e.target.classList.add("active");
       if(e.target.classList.contains("add")){
+        const editPicsToRem = document.querySelectorAll(".editpics");
+        editPicsToRem.forEach(e=>e.remove());
         removeCheckyListeners();
+        document.querySelectorAll(".editpara")[0].style.visibility = "collapse";
+        document.querySelectorAll(".editpicsmom")[0].style.display = "none";
         document.querySelectorAll(".carmain").forEach(e=>{e.style.display="none"});
         document.querySelectorAll(".sec3")[0].style.display="flex";
         document.querySelectorAll(".checky").forEach(e=>{e.style.display="none"});
         document.getElementById("delete").style.display = "none"
       }else if(e.target.classList.contains("view")){
+        const editPicsToRem = document.querySelectorAll(".editpics");
+        editPicsToRem.forEach(e=>e.remove());
         removeCheckyListeners();
+        document.querySelectorAll(".editpara")[0].style.visibility = "collapse";
+        document.querySelectorAll(".editpicsmom")[0].style.display = "none";
         document.querySelectorAll(".carmain").forEach(e=>{e.style.display="block"});
         document.querySelectorAll(".sec3")[0].style.display="none";
         document.querySelectorAll(".checky").forEach(e=>{e.style.display="none"});
@@ -48,6 +60,10 @@ const addVehicleMenuEventClicks = ()=>{
         removeCheckyListeners();
         addEditeventListeners();
       }else if(e.target.classList.contains("delete")){
+        const editPicsToRem = document.querySelectorAll(".editpics");
+        editPicsToRem.forEach(e=>e.remove());
+        document.querySelectorAll(".editpara")[0].style.visibility = "collapse";
+        document.querySelectorAll(".editpicsmom")[0].style.display = "none";
         document.querySelectorAll(".carmain").forEach(e=>{e.style.display="block"});
         document.querySelectorAll(".checky").forEach(e=>{e.style.display="block"});
         removeCheckyListeners();
@@ -55,6 +71,10 @@ const addVehicleMenuEventClicks = ()=>{
         document.getElementById("delete").style.display = "block";
         document.querySelectorAll(".sec3")[0].style.display="none";
       }else{
+        const editPicsToRem = document.querySelectorAll(".editpics");
+        editPicsToRem.forEach(e=>e.remove());
+        document.querySelectorAll(".editpara")[0].style.visibility = "collapse";
+        document.querySelectorAll(".editpicsmom")[0].style.display = "none";
         console.log("false");
       }
      })
@@ -90,12 +110,12 @@ const   fillCars = (e)=> {
         tempEle.querySelectorAll(".checky")[0].id = car.tagsArray;
         tempEle.querySelectorAll(".checky")[0].classList.add(car.id);
         if(car.Picture1!==null&&car.Picture1!==undefined){
-          console.log("filled in pic");
+          //console.log("filled in pic");
           car.Picture1 = JSON.parse(car.Picture1);
           tempEle.querySelectorAll(".main")[0].src =`data:${car.Picture1.fileInfo.meme};base64,${car.Picture1.fileData}`;
         }else{
           getPictures(car);
-          console.log("didnt filled in pic");
+          //console.log("didnt filled in pic");
         }
         carContainerMom.appendChild(tempEle);
       }
@@ -111,23 +131,38 @@ const   fillCars = (e)=> {
 
 
 async function getPictures(car={"car":"isEmpty"}){
-  console.log(car);   
+  //console.log(car);   
   await getMyCarPics(car.tagsArray).then((res)=>{
     const keys = Object.keys(res[0][0]["f0_"]);
     var counter = 1;
     keys.forEach(key=>{
       if(res[0][0]["f0_"][key]!==null&&res[0][0]["f0_"][key]!=="null"){
-        localVar.cars.forEach(v=>{
+        //console.log(res);
+        //console.log(localVar.cars);
+
+        localVar.cars[0].forEach(v=>{
+          //console.log(v.tagsArray===car.tagsArray);
+          //console.log(v.tagsArray)
+          //console.log(car.tagsArray)
           if(v.tagsArray===car.tagsArray){
             v["Picture"+counter] = res[0][0]["f0_"][key];
             counter++;
           }
         })
-        res[0][0]["f0_"][key] = JSON.parse(res[0][0]["f0_"][key]);
-        const disimg = document.getElementById(car.tagsArray).parentNode.querySelectorAll(".main")[0];
-        disimg.src= `data:${res[0][0]["f0_"][key].fileInfo.meme};base64,${res[0][0]["f0_"][key].fileData}`;
+        //console.log(res[0][0]["f0_"][key]);
+        try{
+          res[0][0]["f0_"][key]=JSON.parse(res[0][0]["f0_"][key])
+          
+          const disimg = document.getElementById(car.tagsArray).parentNode.querySelectorAll(".main")[0];
+          disimg.alt = res[0][0]["f0_"][key].fileInfo.ogname;
+          disimg.src= `data:${res[0][0]["f0_"][key].fileInfo.meme};base64,${res[0][0]["f0_"][key].fileData}`;
+          
+        }catch{e=>{
+          res[0][0]["f0_"][key]=res[0][0]["f0_"][key];
+          console.log(e);
+        }}
       }else{
-        console.log(res);
+       // console.log("no pics for this item...");
       }
     })
     counter = 1;
@@ -281,7 +316,7 @@ class cosmetics {
     }
 
     addleftMenuEvents (){
-        document.querySelectorAll(".menu")[0].querySelectorAll(".listitem").forEach(item=>{
+        document.querySelectorAll(".menu")[0].querySelectorAll(".listitem,.lastmenu,#lastmenu").forEach(item=>{
           item.addEventListener("click",e=>{
             if(!e.target.classList.contains("activemainmenu")&&e.target.classList.contains("vehi")){
               document.querySelectorAll(".promo")[0].classList.remove("activemainmenu");
@@ -297,6 +332,24 @@ class cosmetics {
               document.querySelectorAll(".menutootoo")[0].style.display = "flex";
               document.querySelectorAll(".carmain").forEach(car=>{car.style.display="none"});
               document.querySelectorAll(".sec4")[0].style.display = "block";
+            }else if(e.target.id==="lastmenu"||e.target.classList.contains("lastmenu")){
+                //const menuCloser  =  document.querySelectorAll("#lastmenu,.lastmenu");
+                const menuStyle = window.getComputedStyle(document.querySelectorAll(".menu")[0])
+                .getPropertyValue("left");
+                if(menuStyle==="0px"){
+                  document.querySelectorAll(".menu")[0].style.left = "-27%";
+                  document.querySelectorAll("#lastmenu")[0].style.transform = "rotate(180deg)";
+                  document.querySelectorAll(".content")[0].style.transform = "translateX(-22%)";
+                  pauseForTheseSeconds(369,()=>{document.querySelectorAll(".content")[0].style.width = "90%";});
+                  
+                }else{
+                  document.querySelectorAll(".content")[0].style.transform = "translateX(0px)";
+                  document.querySelectorAll(".menu")[0].style.left = "0px";
+                  document.querySelectorAll("#lastmenu")[0].style.transform = "rotate(-180deg)";
+                  pauseForTheseSeconds(369,()=>{document.querySelectorAll(".content")[0].style.width = "76%";});
+                }
+                console.log(menuStyle);
+               
             }
           })
         })
@@ -344,8 +397,9 @@ class cosmetics {
             
               startAnime();
             backendServer.cosmetics.startFetch(data,"login",(r)=>{
-              console.log(r+"did is rrr....")
-              if(r["1"]==="succ"){
+              const tempV = JSON.parse(r);
+              console.log(tempV+"did is rrr....")
+              if(tempV["1"]==="succ"){
                 
               console.log("login is succesful...");
               setStartStateIn();
@@ -366,7 +420,7 @@ class cosmetics {
 
 
     async checkForm2(e){
-      startAnime();
+      document.querySelectorAll(".editpara")[0].style.visibility = "collapse";
       AnImEaction = "uploading car...";
       const type = document.getElementById("vehicletype").value;
       const maker = document.getElementById("maker").value;
@@ -376,18 +430,78 @@ class cosmetics {
       const mileage = document.getElementById("mileage").value;
       const transmission = document.getElementById("transtypes").value;
       const pictures = document.getElementById("pictureuploads").files;
-      console.log(pictures);
+      //console.log(pictures);
       const ameneties = document.getElementById("ameneties").value;
 
       const myCarObj ={type,maker,model,date,price,mileage,transmission,pictures,ameneties};
       myCarObj.pictures = await bundleFilesForUpload(myCarObj.pictures);
 
-      backendServer.cosmetics.startFetch(JSON.stringify(myCarObj),"tflcarupload",(r)=>{
+
+        if(document.querySelectorAll(".add")[0].classList.contains("active")){
+          console.log(myCarObj.pictures);
+          startAnime();
+            backendServer.cosmetics.startFetch(JSON.stringify(myCarObj),"tflcarupload",(r)=>{
+            if(r["1"]==="succ");
+            console.log("login is succesful...");
+            //setStartStateIn();
+            window.location.reload();
+            })
+            
+          
+        }else{
+          const oldPics = document.querySelectorAll(".editpics");
+          const idSpan = document.querySelectorAll(".thisformid");
+            myCarObj["tagsArray"] = oldPics!==undefined&&oldPics[0].nodeType?oldPics[0].title:idSpan[0].id;
+          console.log(oldPics);
+          console.log(idSpan);
+          if(oldPics&&oldPics[0].nodeType&&myCarObj.pictures.length<=0){
+            myCarObj.pictures = [];
+            oldPics.forEach(pic=>{
+              const disPicObj = {fileInfo:{ogname:"",meme:""},fileData:""}
+              const picArr = pic.src.split(";");
+              disPicObj.fileInfo.meme = picArr[0].split(":")[1];
+              disPicObj.fileInfo.ogname = pic.alt;
+              disPicObj.fileData = picArr[1].split(",")[1];
+              myCarObj.pictures.push(disPicObj);
+            //console.log(picArr[0].split(":")[1]);
+              
+          })
+
+          //startAnime();
+          console.log("reuploaded pictures");
+          console.log(myCarObj);
+          backendServer.cosmetics.startFetch(JSON.stringify(myCarObj),"tflcaredit",(r)=>{
+            if(r["1"]==="succ");
+            console.log("login is succesful...");
+            //setStartStateIn();
+            //window.location.reload();
+          })
+
+
+          }else{
+            //startAnime();
+            console.log("new pictures");
+            console.log(myCarObj);
+            backendServer.cosmetics.startFetch(JSON.stringify(myCarObj),"tflcaredit",(r)=>{
+              if(r["1"]==="succ");
+              console.log("login is succesful...");
+              //setStartStateIn();
+              //window.location.reload();
+            })        
+
+          }
+         
+
+        }
+      /*
+        startAnime();
+        backendServer.cosmetics.startFetch(JSON.stringify(myCarObj),"tflcarupload",(r)=>{
         if(r["1"]==="succ");
         console.log("login is succesful...");
         //setStartStateIn();
         window.location.reload();
-      });
+      })
+      */;
   
 
     }
@@ -458,16 +572,38 @@ const addEditClicks = (e)=>{
   e.stopPropagation();
   const id = e.target.parentNode.querySelectorAll(".checky")[0].id;
   //console.log(localVar.cars[0][0]);
+  document.querySelectorAll(".editpicsmom")[0].querySelectorAll(".editpics").forEach(e=>e.remove());
   for(let i = 0; i< localVar.cars[0].length;i++){
     if(localVar.cars[0][i].tagsArray===id){
-      console.log(localVar.cars[0][i]);
+      const tempArr = ["Picture1","Picture2","Picture3","Picture4","Picture5"];
+     
       removeCheckyListeners();
       //console.log("true");
       document.querySelectorAll(".carmain").forEach(e=>{e.style.display="none"});
       document.querySelectorAll(".sec3")[0].style.display="flex";
       document.querySelectorAll(".checky").forEach(e=>{e.style.display="none"});
       document.getElementById("delete").style.display = "none";
+
       document.querySelectorAll(".editpicsmom")[0].style.display = "flex";
+      tempArr.forEach(ele=>{
+        if(localVar.cars[0][i][ele]!==undefined){
+          const picObj = JSON.parse(localVar.cars[0][i][ele]);
+          const newPic = picCont.cloneNode(true);
+          newPic.alt = picObj.fileInfo.ogname;
+          newPic.title = localVar.cars[0][i].tagsArray;
+          document.querySelectorAll(".thisformid")[0].id = localVar.cars[0][i].tagsArray;
+          newPic.src = `data:${picObj.fileInfo.meme};base64,${picObj.fileData}`;
+          document.querySelectorAll(".editpicsmom")[0].appendChild(newPic);
+          //console.log(newPic.src);
+          //console.log(picObj.fileData);
+        }else{
+          console.log(ele+" is not available");
+        }
+    })
+      
+      document.querySelectorAll(".editpara")[0].style.visibility = "visible";
+      
+      
       document.querySelectorAll("#vehicletype")[0].value = localVar.cars[0][i].Type1;
       document.querySelectorAll("#maker")[0].value = localVar.cars[0][i].BrandType1;
       document.querySelectorAll("#model")[0].value = localVar.cars[0][i].Name1;
@@ -559,7 +695,7 @@ const checkLogin = async(s)=>{
   AnImEaction = "loging in...";
   startAnime();
   s.startFetch(JSON.stringify({}),"checklogin",(e2)=>{
-    console.log(e2);
+    //console.log(e2);
     const e=JSON.parse(e2);
     
     
@@ -668,4 +804,11 @@ const stopAnime = ()=>{
   const textbox = box.querySelectorAll("span")[0];
   box.style.display = "none";
   textbox.innerText = "idle";
+}
+
+const pauseForTheseSeconds = (seconds=100,action=()=>{})=>{
+  const thisTimeout = window.setTimeout(()=>{
+      action();
+      window.clearTimeout(thisTimeout);
+  },seconds)
 }

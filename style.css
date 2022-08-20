@@ -80,7 +80,7 @@ ul.menu{
     padding-left: 69px;
     padding-top: 52px;
     left: 0px;
-    height: 100vh;
+    height: 100%;
     z-index: 36;
 
     display: flex;
@@ -93,6 +93,7 @@ ul.menu{
 }
 .content{
     position: absolute;
+    transition: all .69s ease-out;
     top: 0px;
     right: 0px;
 }
@@ -133,6 +134,13 @@ ul.menu li:hover{
     cursor: pointer;;
 }
 
+#lastmenu:hover{
+    background-color: #E2BF14;
+    border-radius: 6px;
+    color: #284185;
+    cursor: pointer;;
+}
+
 body section{
     display: block;
     min-width: 100%;
@@ -158,9 +166,10 @@ body .sec2{
     justify-content:flex-start;
     align-items: flex-start;
     min-height: 100vh;
+    padding-right: 5%;
     position: absolute;
-    width: 110%;
-    left: -5%;
+    width: 100%;
+    left: 0px;
     top: 106px;
     box-sizing: border-box;
     z-index: 65;
@@ -187,7 +196,7 @@ button.submitlogtfl {
     height: 36px;
     box-sizing: border-box;
     box-shadow: .69px .69px 1.69px 0.2px black;
-    transition: all .069s step-end;
+    transition: all .69s step-end;
 }
 
 button.submitlogtfl:hover{
@@ -208,21 +217,21 @@ button.submitlogtfl:hover{
 
 .sec2 .content{
     background-color: transparent;
-    width: 60%;
+    width: 76%;
     position: relative;
-    left:35%;
+    left:24%;
     top:48px;
     min-width: 600px;
     box-sizing: border-box;
     padding: 24px 12px;
-    padding-top: 72px;
+    padding-top: 99px;
     border:.32px dashed #284185;
     border-radius: 12px;
     
     display: flex;
     flex-flow: row;
     justify-content: flex-end;
-    align-items:center;
+    align-items:flex-start;
     flex-wrap: wrap;
 }
 
@@ -332,6 +341,11 @@ button.submitlogtfl:hover{
     z-index: 100;
   }
 
+  .menutoo{
+    position: absolute;
+    top:0px;
+  }
+
   .menutootoo{
     display: none;
   }
@@ -349,11 +363,18 @@ button.submitlogtfl:hover{
   .actchild{
     padding: 5px 7px;
     box-sizing: border-box;
+    transition: all .69sec ease-out;
   }
 
   .actchild:hover{
     color:white;
     background-color: #284185;
+    border-radius: 6.9px;
+  }
+
+  .actchild.active{
+    background-color: #284185 !important;
+    color: white !important;
   }
   
 
@@ -397,9 +418,13 @@ button.submitlogtfl:hover{
     font-family: "Rajdhani" !important;
     margin: 48px auto;
     position: relative;
+    top:36px;
     min-width: 240px;
     max-width: 669px;
-    width: 50%;
+    box-sizing: border-box;
+    padding-top: 42px;
+    padding-bottom: 36px;
+    width: 69%;
     background-color: transparent;
     border: .69px dotted black;
     border-radius: 12px;
@@ -436,10 +461,10 @@ width: 100%;
 margin: 6px auto;
 }
 
-.bookingchild textarea, .promoform .bookingchild textarea{
+.bookingchild textarea, .promoform .bookingchild textarea,input,select{
 box-sizing: border-box;
 resize: none;
-width: 65%;
+width: 65% !important;
 height: 28px;
 font-family: Lexend !important;
 font-size: 12px;
@@ -535,14 +560,53 @@ img.editpics{
     height: auto;
 }
 
+.editpara{
+    visibility: collapse;
+}
 
-@media screen and (min-width: 600px) {
+
+
+.thisformid{
+    display: none;
+}
+
+
+
+
+
+
+
+@media screen and (min-width: 1169px) {
     .half-width {
       width:50% !important;
     }
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 1169px) {
+    header h1 {
+        font-size: 24px;
+        font-weight: 600;
+        top: 36px;
+        width: 56%;
+        left: 25%;
+    }
+
+    .menu .listitem, .menu .buttrow{
+        position: relative;
+        left:-98px;
+    }
+
+    .menutoo{
+        width:69%;
+    }
+
+    .sec2 .content{
+        left:25%
+    }
+
+    #lastmenu{
+        right:0px;
+    }
 
   
   }
