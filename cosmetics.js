@@ -1,4 +1,5 @@
 const picCont = document.querySelectorAll(".editpics")[0];
+const serverURL = "https://tflgroup.co.tz/"
 
       picCont.remove();
 let AnImEaction = "idle";
@@ -105,7 +106,8 @@ const   fillCars = (e)=> {
         tempEle.querySelectorAll(".year")[0].innerText = car.YearOfMake;
         tempEle.querySelectorAll(".brand")[0].innerText = car.BrandType1;
         tempEle.querySelectorAll(".make")[0].innerText = car.Name1;
-        tempEle.querySelectorAll(".price")[0].innerText = car.PriceTZS?car.PriceTZS:"xxx";
+        tempEle.querySelectorAll(".mile")[0].innerText = commaSep(car.Mileage)+" km";
+        tempEle.querySelectorAll(".price")[0].innerText = commaSep(car.PriceTZS);
         tempEle.querySelectorAll(".prtype")[0].innerText = "TZS";
         tempEle.querySelectorAll(".checky")[0].id = car.tagsArray;
         tempEle.querySelectorAll(".checky")[0].classList.add(car.id);
@@ -180,14 +182,30 @@ async function getPromoPicture(){
 }
 
 
+function commaSep (n="1000000"){
+  n = n.toString();
+  n = reverse(n);
+  var newStr = "";
+  for(let i=n.length-1;i>=0;i--){
+    if((i+1)%3===0&&i!==n.length-1){
+      newStr = newStr+","+n[i];
+    }else{
+      newStr = newStr+n[i];
+    }
+  }
+  //newStr = reverse(newStr);
+  //console.log(newStr);
+  return newStr;
+}
+
+function reverse(s){
+  return s.split("").reverse().join("");
+}
+
 
 async function getMyCarPics(para=""){
-  //const reqString = "http://127.0.0.1:8080/tflcarspics?paraOne="+para;
-  const reqString = "https://expressongoogle-jzam6yvx3q-ez.a.run.app/tflcarspics?paraOne="+para;
-
-      
   
-    var myRequest = new Request(reqString);
+    var myRequest = new Request(serverURL+"tflcarspics?paraOne="+para);
     
   
          
@@ -232,7 +250,7 @@ async function getMyCarPics(para=""){
 
 
   async function fetchingPromoPic(){
-    const reqString = "http://127.0.0.1:8080/tflpromopic";
+    const reqString = serverURL+"tflpromopic";
   
         
     
@@ -649,7 +667,7 @@ const addEditClicks = (e)=>{
 
       document.querySelectorAll(".editpicsmom")[0].style.display = "flex";
       tempArr.forEach(ele=>{
-        if(localVar.cars[0][i][ele]!==undefined){
+        if(localVar.cars[0][i][ele]!==undefined&&localVar.cars[0][i][ele].length>1){
           const picObj = JSON.parse(localVar.cars[0][i][ele]);
           const newPic = picCont.cloneNode(true);
           newPic.alt = picObj.fileInfo.ogname;
