@@ -335,15 +335,10 @@ button.submitlogtfl:hover{
     flex-flow: row-reverse;
     justify-content: space-between;
     align-items: center;
-    position: fixed;
-    top: 140px;
-    margin: 0 auto;
-    z-index: 100;
-  }
-
-  .menutoo{
     position: absolute;
     top:0px;
+    margin: 0 auto;
+    z-index: 100;
   }
 
   .menutootoo{
@@ -409,7 +404,9 @@ button.submitlogtfl:hover{
 
   .previewofpromo img{
     background-color: #284185;
-    width: 120px;
+    width: 240px;
+    box-sizing: border-box;
+    margin: 12px 18px;
     min-height: 69px;
   }
 
@@ -434,6 +431,7 @@ button.submitlogtfl:hover{
     align-items: center;
     text-align: center;
 }
+
 .bookingchild, .promoform .bookingchild{
     font-family: "Rajdhani" !important;
     text-align: center;
@@ -521,27 +519,34 @@ img.afterlife{
 
 
 .loading{
-    width: 100%;
-    height: 110vh;
+    width: 420px;
+    height: 169px;
     background-color:white;
     position: absolute;
-    top: 0px;
-    left: 0px;
-    z-index: 1000;
+    top: 169px;
+    left: 36%;
+    z-index: 100;
+    padding: 36px 24px;
+
+    border: .69px #E2BF14 dotted;
     
     display: none;
     flex-flow: column;
     justify-content: flex-start;
     align-items: center;
-
-    padding-top:198px;
     box-sizing: border-box;
 }
 
 .loading p{
-    font-size: 36px;
+    font-size: 28px;
     font-weight: 600;
     letter-spacing: 1.69px;
+    margin-block-start: 0px;
+    margin-block-end: 0px;
+}
+
+.loading img{
+  width:36px;
 }
 
 .editpicsmom{
@@ -606,6 +611,16 @@ img.editpics{
 
     #lastmenu{
         right:0px;
+    }
+
+    .sec3{
+        width:119%;
+    }
+
+    .bookingmom, .promoform{
+        width: 96%;
+       
+        
     }
 
   

@@ -1,7 +1,7 @@
 const picCont = document.querySelectorAll(".editpics")[0];
 
       picCont.remove();
-let AnImEaction = "idle...";
+let AnImEaction = "idle";
 const backendServer = {};
 backendServer["cosmetics"] = await (async () => {
       
@@ -118,10 +118,11 @@ const   fillCars = (e)=> {
           //console.log("didnt filled in pic");
         }
         carContainerMom.appendChild(tempEle);
+      }else if(car.Type1==="promo"){
+        getPromoPicture();
       }
     });
     addVehicleMenuEventClicks();
-    fillPromoPreview();
     checkForDeleted();
   }
   });
@@ -166,6 +167,14 @@ async function getPictures(car={"car":"isEmpty"}){
       }
     })
     counter = 1;
+   })
+    
+}
+
+async function getPromoPicture(){
+  //console.log(car);   
+  await fetchingPromoPic().then((res)=>{
+    fillPromoPreview(res);
    })
     
 }
@@ -222,15 +231,64 @@ async function getMyCarPics(para=""){
   }
 
 
+  async function fetchingPromoPic(){
+    const reqString = "http://127.0.0.1:8080/tflpromopic";
+  
+        
+    
+      var myRequest = new Request(reqString);
+      
+    
+           
+      const returnVal = await fetch(myRequest, {
+        method: 'GET', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'omit', // include, *same-origin, omit
+        headers: {
+          //'Content-Type': 'text/txt'
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      })
+            .then(function(response) {
+              if (!response.ok) {
+                
+                throw new Error("HTTP error, status = " + response.status);
+                
+              }
+              
+              return response.text();
+            })
+            .then(function(myBlob) {
+              
+              var cloudObject = JSON.parse(myBlob);
+              //window.location.href = "./";
+              return cloudObject;
+              
+            })
+            .catch(function(error) {
+              console.log(error.message);
+            });
+    
+            
+           // document.querySelectorAll(".mycolumns")[1].innerHTML = returnVal;
+            return returnVal; 
+    
+        // tempDiv.innerHTML = Object.entries(localVar.values)[0][1][3] ;  
+    }
 
 
 
 
 
-const fillPromoPreview = ()=>{
-  for(let i = 0; i< localVar.cars[0].length;i++){
-    if(localVar.cars[0][i].Type1==="promo"&&localVar.cars[0][i].Picture1!==null&&localVar.cars[0][i].Picture1!==undefined){
-      const pic = JSON.parse(localVar.cars[0][i].Picture1);
+
+
+const fillPromoPreview = (p)=>{
+   for(let i = 0; i< localVar.cars[0].length;i++){
+    if(localVar.cars[0][i].Type1==="promo"){
+      const pic = JSON.parse(p[0][0].Picture1);
       document.querySelectorAll(".previewofpromo")[0].querySelectorAll("h1")[0].innerText = localVar.cars[0][i].Name1;
       document.querySelectorAll(".previewofpromo")[0].querySelectorAll("p")[0].innerText = localVar.cars[0][i].BrandType1;
       document.querySelectorAll(".previewofpromo")[0].querySelectorAll("img")[0].src =`data:${pic.fileInfo.meme};base64,${pic.fileData}`;
@@ -322,9 +380,11 @@ class cosmetics {
               document.querySelectorAll(".promo")[0].classList.remove("activemainmenu");
               document.querySelectorAll(".vehi")[0].classList.add("activemainmenu");
               document.querySelectorAll(".menutoo")[0].style.display = "flex";
+              document.querySelectorAll(".menutoo")[0].querySelectorAll(".view")[0].click();
               document.querySelectorAll(".menutootoo")[0].style.display = "none";
               document.querySelectorAll(".carmain").forEach(car=>{car.style.display="block"});
               document.querySelectorAll(".sec4")[0].style.display = "none";
+              //document.querySelectorAll(".sec3")[0].style.display = "block";
             }else if(!e.target.classList.contains("activemainmenu")&&e.target.classList.contains("promo")){
               document.querySelectorAll(".vehi")[0].classList.remove("activemainmenu");
               document.querySelectorAll(".promo")[0].classList.add("activemainmenu");
@@ -332,6 +392,7 @@ class cosmetics {
               document.querySelectorAll(".menutootoo")[0].style.display = "flex";
               document.querySelectorAll(".carmain").forEach(car=>{car.style.display="none"});
               document.querySelectorAll(".sec4")[0].style.display = "block";
+              document.querySelectorAll(".sec3")[0].style.display = "none";
             }else if(e.target.id==="lastmenu"||e.target.classList.contains("lastmenu")){
                 //const menuCloser  =  document.querySelectorAll("#lastmenu,.lastmenu");
                 const menuStyle = window.getComputedStyle(document.querySelectorAll(".menu")[0])
@@ -421,7 +482,7 @@ class cosmetics {
 
     async checkForm2(e){
       document.querySelectorAll(".editpara")[0].style.visibility = "collapse";
-      AnImEaction = "uploading car...";
+      AnImEaction = "uploading car";
       const type = document.getElementById("vehicletype").value;
       const maker = document.getElementById("maker").value;
       const model = document.getElementById("model").value;
@@ -467,26 +528,26 @@ class cosmetics {
               
           })
 
-          //startAnime();
+          startAnime();
           console.log("reuploaded pictures");
           console.log(myCarObj);
           backendServer.cosmetics.startFetch(JSON.stringify(myCarObj),"tflcaredit",(r)=>{
             if(r["1"]==="succ");
             console.log("login is succesful...");
             //setStartStateIn();
-            //window.location.reload();
+            window.location.reload();
           })
 
 
           }else{
-            //startAnime();
+            startAnime();
             console.log("new pictures");
             console.log(myCarObj);
             backendServer.cosmetics.startFetch(JSON.stringify(myCarObj),"tflcaredit",(r)=>{
               if(r["1"]==="succ");
               console.log("login is succesful...");
               //setStartStateIn();
-              //window.location.reload();
+              window.location.reload();
             })        
 
           }
@@ -508,7 +569,7 @@ class cosmetics {
 
     async checkForm3(e){
       startAnime();
-      AnImEaction = "deleting ...";
+      AnImEaction = "deleting";
       const selected = document.querySelectorAll(".checked");
       const obj = {};
       var counter = 0;
@@ -530,7 +591,7 @@ class cosmetics {
 
 
     async checkForm4(e){
-      AnImEaction = "updating promo...";
+      AnImEaction = "updating promo";
       startAnime();
       const promotit = document.getElementById("promotit").value;
       const promoword = document.getElementById("promoword").value;
@@ -545,6 +606,8 @@ class cosmetics {
         if(r["1"]==="succ"){
           console.log("login is succesful...");
           //setStartStateIn();
+          window.location.reload();
+        }else{
           window.location.reload();
         }
       });
@@ -692,7 +755,7 @@ function decrypt (transitmessage, pass) {
 
 
 const checkLogin = async(s)=>{
-  AnImEaction = "loging in...";
+  AnImEaction = "loging in";
   startAnime();
   s.startFetch(JSON.stringify({}),"checklogin",(e2)=>{
     //console.log(e2);
