@@ -1,6 +1,6 @@
 export {server as server};
 
-const serverURL = "https://tflgroup.co.tz/"
+const serverURL = "https://expressongoogle-jzam6yvx3q-ez.a.run.app/"
 //const paraOne = "test";
 class server {
     
@@ -20,7 +20,7 @@ const fetchInfoWithFilter = async (data = JSON.stringify({"def":"data"}),paraOne
         credentials: 'include', // include, *same-origin, omit
         headers: {
           //'Access-Control-Allow-Headers':'x-requested-with, Content-Type, origin, authorization, accept, client-security-token',
-          'Content-Type': 'text/plain',
+          //'Content-Type': 'text/plain',
           //'Access-Control-Allow-Origin':'http://127.0.0.1:8080'
           // 'Content-Type': 'application/x-www-form-urlencoded',
         },

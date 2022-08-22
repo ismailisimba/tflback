@@ -1,5 +1,5 @@
 const picCont = document.querySelectorAll(".editpics")[0];
-const serverURL = "https://tflgroup.co.tz/"
+const serverURL = "https://expressongoogle-jzam6yvx3q-ez.a.run.app/"
 
       picCont.remove();
 let AnImEaction = "idle";
