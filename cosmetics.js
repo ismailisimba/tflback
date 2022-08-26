@@ -550,9 +550,6 @@ class cosmetics {
           console.log("reuploaded pictures");
           console.log(myCarObj);
           backendServer.cosmetics.startFetch(JSON.stringify(myCarObj),"tflcaredit",(r)=>{
-            if(r["1"]==="succ");
-            console.log("login is succesful...");
-            //setStartStateIn();
             window.location.reload();
           })
 
@@ -562,9 +559,6 @@ class cosmetics {
             console.log("new pictures");
             console.log(myCarObj);
             backendServer.cosmetics.startFetch(JSON.stringify(myCarObj),"tflcaredit",(r)=>{
-              if(r["1"]==="succ");
-              console.log("login is succesful...");
-              //setStartStateIn();
               window.location.reload();
             })        
 

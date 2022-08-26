@@ -1,6 +1,6 @@
 export {server as server};
 
-const serverURL = "https://expressongoogle-jzam6yvx3q-ez.a.run.app/"
+const serverURL = "https://expressongoogle-jzam6yvx3q-ez.a.run.app"
 //const paraOne = "test";
 class server {
     
