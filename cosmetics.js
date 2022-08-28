@@ -1,6 +1,7 @@
 const picCont = document.querySelectorAll(".editpics")[0];
 const serverURL = "https://expressongoogle-jzam6yvx3q-ez.a.run.app/"
-
+//const serverURL = "http://127.0.0.1:8080/";
+//const serverURL = "https://tflgroup.co.tz/";
       picCont.remove();
 let AnImEaction = "idle";
 const backendServer = {};
@@ -595,6 +596,8 @@ class cosmetics {
         if(r["1"]==="succ"){
           console.log("login is succesful...");
           //setStartStateIn();
+          window.location.reload();
+        }else{
           window.location.reload();
         }
       });
