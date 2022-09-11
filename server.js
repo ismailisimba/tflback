@@ -1,7 +1,7 @@
 export {server as server};
 
-const serverURL = "https://expressongoogle-jzam6yvx3q-ez.a.run.app"
-//const serverURL = "http://127.0.0.1:8080"
+//const serverURL = "https://expressongoogle-jzam6yvx3q-ez.a.run.app"
+const serverURL = "http://127.0.0.1:8080"
 //const serverURL = "https://tflgroup.co.tz";
 //const paraOne = "test";
 class server {
@@ -12,6 +12,7 @@ class server {
         
     }
 }
+
 
 const fetchInfoWithFilter = async (data = JSON.stringify({"def":"data"}),paraOne="paraOne",funcAfter = (val)=>{console.log("fetch succesful")})=>{
     var myRequest = new Request(serverURL+"/"+paraOne);

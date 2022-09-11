@@ -15,8 +15,8 @@ backendServer["cosmetics"] = await (async () => {
     return cosmetics;    
   });
 
-
-
+const temp = {};
+  
 
 
 const setStartStateOut = ()=>{
@@ -29,6 +29,7 @@ const setStartStateOut = ()=>{
 
 
 const addVehicleMenuEventClicks = ()=>{
+  addNewPicEditingFuncs();
   document.querySelectorAll(".actchild").forEach((e)=>{
     e.addEventListener("click",(e)=>{
         document.querySelectorAll(".actchild").forEach(e=>{e.classList.remove("active")});
@@ -38,7 +39,7 @@ const addVehicleMenuEventClicks = ()=>{
         editPicsToRem.forEach(e=>e.remove());
         removeCheckyListeners();
         document.querySelectorAll(".editpara")[0].style.visibility = "collapse";
-        document.querySelectorAll(".editpicsmom")[0].style.display = "none";
+        document.querySelectorAll(".editpicsmom")[0].style.display = "flex";
         document.querySelectorAll(".carmain").forEach(e=>{e.style.display="none"});
         document.querySelectorAll(".sec3")[0].style.display="flex";
         document.querySelectorAll(".checky").forEach(e=>{e.style.display="none"});
@@ -478,7 +479,7 @@ class cosmetics {
               startAnime();
             backendServer.cosmetics.startFetch(data,"login",(r)=>{
               const tempV = JSON.parse(r);
-              console.log(tempV+"did is rrr....")
+              console.log({"goes":"brrr",tempV})
               if(tempV["1"]==="succ"){
                 
               console.log("login is succesful...");
@@ -668,10 +669,13 @@ const addEditClicks = (e)=>{
           const picObj = JSON.parse(localVar.cars[0][i][ele]);
           const newPic = picCont.cloneNode(true);
           newPic.alt = picObj.fileInfo.ogname;
+          newPic.setAttribute("data-ogname",picObj.fileInfo.ogname);
+          newPic.setAttribute("data-meme",picObj.fileInfo.meme);
           newPic.title = localVar.cars[0][i].tagsArray;
           document.querySelectorAll(".thisformid")[0].id = localVar.cars[0][i].tagsArray;
           newPic.src = `data:${picObj.fileInfo.meme};base64,${picObj.fileData}`;
           document.querySelectorAll(".editpicsmom")[0].appendChild(newPic);
+          localVar["temppics1"] = document.querySelectorAll(".editpicsmom")[0].childNodes;
           //console.log(newPic.src);
           //console.log(picObj.fileData);
         }else{
@@ -840,6 +844,7 @@ const bundleFilesForUpload = async (fileList)=>{
   return filesDataObj;
 }
 
+
 const readFile = async (file)=>{
 
   const toBinaryString = file => new Promise((resolve, reject) => {
@@ -889,4 +894,147 @@ const pauseForTheseSeconds = (seconds=100,action=()=>{})=>{
       action();
       window.clearTimeout(thisTimeout);
   },seconds)
+}
+
+
+const addNewPicEditingFuncs = async () => {
+  const pictures = document.querySelectorAll("#pictureuploads")[0];
+  pictures.addEventListener("input",async (e)=>{
+
+    const finalpics = [];
+        
+
+    const files = Array.from(e.target.files);
+
+    for(let i = 0 ; i < files.length ; i++){
+      let tempObj = {};
+      let file = files[i];
+  
+        tempObj["fileName"] = file.name;
+        tempObj["fileMeme"] = file.type;
+        tempObj["fileData"] = await readFileToo(file).then((file)=>{
+          file =  file;
+          return file;
+        }).then((file)=>{
+          return file;
+        })
+        finalpics.push(tempObj);
+      }
+    
+   const momEdit = document.querySelectorAll(".editpicsmom")[0];
+   if((momEdit.childNodes.length+finalpics.length)>9){
+      alert("Maximum Number of Pictures Allowed is 6. Select Files Again Without Exceeding Limit.");
+      e.target.value = "";
+      momEdit.querySelectorAll("img").forEach(im=>im.remove());
+      document.querySelectorAll(".menutoo")[0].querySelectorAll(".view")[0].click();
+   }else{
+    insertFormPics(momEdit,finalpics).then(()=>{
+      localVar["temppics1"] = momEdit.childNodes;
+    }).then(()=>{
+      const imgs = document.querySelectorAll(".editpicsmom")[0].querySelectorAll(".editpics").forEach(pic=>{
+        dragElement(pic);
+      })
+    });
+   }
+
+  })
+}
+
+
+
+const readFileToo = async (file)=>{
+
+  const toBinaryString = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+});
+
+let parsedFile = null;
+parsedFile =  await toBinaryString(file);
+
+  return parsedFile;
+}
+
+
+const insertFormPics = async (mom,pics)=>{
+  await pics.forEach(pic=>{
+    const nuimg = document.createElement("img");
+    nuimg.className = "editpics";
+    //put meme n ogname
+    nuimg.setAttribute("data-ogname",pic.fileName);
+    nuimg.setAttribute("data-meme",pic.fileMeme);
+    nuimg.src = pic.fileData;
+    mom.appendChild(nuimg);
+  })
+}
+
+
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0;//og position
+  var pos3 = 0, pos4 = 0;//new pos
+  
+    elmnt.onmousedown = dragMouseDown;
+  
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    console.log(getOffsetObj(elmnt));
+    elmnt.style.position = "relative";
+    elmnt.style.zIndex = "2";
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    //console.log({"final":"pos",pos3,pos4,pos1,pos2});
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    console.log(getOffsetObj(elmnt));
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    //elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.top = (pos2) + "px";
+    //elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    elmnt.style.left = (pos1) + "px";
+    //console.log({"final":"pos",pos3,pos4,pos1,pos2});
+  }
+
+  function closeDragElement() {
+    //console.log(getOffsetObj(elmnt));
+    // stop moving when mouse button is released:
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+
+
+
+
+function getOffsetObj (mom){
+  //var bodyRect = document.querySelectorAll(".canvas")[0].getBoundingClientRect();
+  var bodyRect = document.querySelectorAll(".editpicsmom")[0].getBoundingClientRect();
+  var elemRect = mom.getBoundingClientRect();
+  const offSetObj = {};
+  offSetObj["top"]  = elemRect.top - bodyRect.top;
+  offSetObj["left"]  = elemRect.left - bodyRect.left;
+  offSetObj["right"]  = Math.abs(elemRect.right - bodyRect.right);
+  offSetObj["bottom"]  = Math.abs(elemRect.bottom - bodyRect.bottom);
+  offSetObj["parHeight"] = bodyRect.height;
+  offSetObj["parWidth"] = bodyRect.width;
+  offSetObj["chiWidth"] = elemRect.width;
+  offSetObj["chiHeight"] = elemRect.height;
+
+
+ return offSetObj;
 }

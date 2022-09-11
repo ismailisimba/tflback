@@ -551,7 +551,8 @@ img.afterlife{
 
 .editpicsmom{
     display: none;
-    flex-flow: row;
+    background-color: red;
+    flex-flow: row-reverse;
     flex-wrap: wrap;
     justify-content: space-evenly;
     align-items: center;
@@ -562,7 +563,17 @@ img.afterlife{
 img.editpics{
     width: 120px;
     min-height: 69px;
+    position: relative;
+    padding: 3px 4.5px;
+    background-color: #284185;
+    box-sizing: border-box;
+    margin-bottom: 9px;
     height: auto;
+}
+
+img.editpics:hover{
+    background-color: #E2BF14;
+    cursor: move;
 }
 
 .editpara{
