@@ -4,6 +4,7 @@ const serverURL = "https://expressongoogle-jzam6yvx3q-ez.a.run.app/"
 //const serverURL = "https://tflgroup.co.tz/";
       picCont.remove();
 let AnImEaction = "idle";
+var dragSrcEl;
 const backendServer = {};
 backendServer["cosmetics"] = await (async () => {
       
@@ -671,9 +672,11 @@ const addEditClicks = (e)=>{
           newPic.alt = picObj.fileInfo.ogname;
           newPic.setAttribute("data-ogname",picObj.fileInfo.ogname);
           newPic.setAttribute("data-meme",picObj.fileInfo.meme);
+          newPic.setAttribute("draggable",true);
+          addDragy(newPic);
           newPic.title = localVar.cars[0][i].tagsArray;
           document.querySelectorAll(".thisformid")[0].id = localVar.cars[0][i].tagsArray;
-          newPic.src = `data:${picObj.fileInfo.meme};base64,${picObj.fileData}`;
+          newPic.style.backgroundImage = `url(data:${picObj.fileInfo.meme};base64,${picObj.fileData})`;
           document.querySelectorAll(".editpicsmom")[0].appendChild(newPic);
           localVar["temppics1"] = document.querySelectorAll(".editpicsmom")[0].childNodes;
           //console.log(newPic.src);
@@ -922,7 +925,7 @@ const addNewPicEditingFuncs = async () => {
       }
     
    const momEdit = document.querySelectorAll(".editpicsmom")[0];
-   if((momEdit.childNodes.length+finalpics.length)>9){
+   if((momEdit.querySelectorAll(".editpics").length)>9){
       alert("Maximum Number of Pictures Allowed is 6. Select Files Again Without Exceeding Limit.");
       e.target.value = "";
       momEdit.querySelectorAll("img").forEach(im=>im.remove());
@@ -932,7 +935,6 @@ const addNewPicEditingFuncs = async () => {
       localVar["temppics1"] = momEdit.childNodes;
     }).then(()=>{
       const imgs = document.querySelectorAll(".editpicsmom")[0].querySelectorAll(".editpics").forEach(pic=>{
-        dragElement(pic);
       })
     });
    }
@@ -960,81 +962,68 @@ parsedFile =  await toBinaryString(file);
 
 const insertFormPics = async (mom,pics)=>{
   await pics.forEach(pic=>{
-    const nuimg = document.createElement("img");
+    const nuimg = document.createElement("div");
     nuimg.className = "editpics";
     //put meme n ogname
     nuimg.setAttribute("data-ogname",pic.fileName);
     nuimg.setAttribute("data-meme",pic.fileMeme);
-    nuimg.src = pic.fileData;
+    nuimg.setAttribute("draggable",true);
+    addDragy(nuimg);
+    nuimg.style.backgroundImage = `url(${pic.fileData})`;
     mom.appendChild(nuimg);
   })
 }
 
 
-function dragElement(elmnt) {
-  var pos1 = 0, pos2 = 0;//og position
-  var pos3 = 0, pos4 = 0;//new pos
+const addDragy = (element) => {
   
-    elmnt.onmousedown = dragMouseDown;
-  
+  function handleDragStart(e) {
+    this.style.opacity = '0.4';
+    dragSrcEl = this;
 
-  function dragMouseDown(e) {
-    e = e || window.event;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', this.outerHTML);
+  }
+
+  function handleDragEnd(e) {
+    this.style.opacity = '1';
+    this.classList.remove('over');
+  }
+
+  function handleDragOver(e) {
     e.preventDefault();
-    // get the mouse cursor position at startup:
-    console.log(getOffsetObj(elmnt));
-    elmnt.style.position = "relative";
-    elmnt.style.zIndex = "2";
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    //console.log({"final":"pos",pos3,pos4,pos1,pos2});
-    document.onmouseup = closeDragElement;
-    // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
+    return false;
   }
 
-  function elementDrag(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // calculate the new cursor position:
-    console.log(getOffsetObj(elmnt));
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    // set the element's new position:
-    //elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-    elmnt.style.top = (pos2) + "px";
-    //elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-    elmnt.style.left = (pos1) + "px";
-    //console.log({"final":"pos",pos3,pos4,pos1,pos2});
+  function handleDragEnter(e) {
+    this.classList.add('over');
   }
 
-  function closeDragElement() {
-    //console.log(getOffsetObj(elmnt));
-    // stop moving when mouse button is released:
-    document.onmouseup = null;
-    document.onmousemove = null;
+  function handleDragLeave(e) {
+    this.classList.remove('over');
   }
-}
 
+  function handleDrop(e) {
+    e.stopPropagation(); // stops the browser from redirecting.
+    if (dragSrcEl !== this) {
+      dragSrcEl.outerHTML = this.outerHTML;
+      this.outerHTML = e.dataTransfer.getData('text/html');
+      console.log("disisruningeeh");
+      console.log(this.outerHTML);
+      console.log(dragSrcEl.outerHTML);
+    }else{
+      console.log("disisruning");
+      console.log(this);
+      console.log(dragSrcEl);
+    }
+    return false;
+  }
 
+    element.addEventListener('dragstart', handleDragStart);
+    element.addEventListener('dragover', handleDragOver);
+    element.addEventListener('dragenter', handleDragEnter);
+    element.addEventListener('dragleave', handleDragLeave);
+    element.addEventListener('dragend', handleDragEnd);
+    element.addEventListener('drop', handleDrop);
 
-
-function getOffsetObj (mom){
-  //var bodyRect = document.querySelectorAll(".canvas")[0].getBoundingClientRect();
-  var bodyRect = document.querySelectorAll(".editpicsmom")[0].getBoundingClientRect();
-  var elemRect = mom.getBoundingClientRect();
-  const offSetObj = {};
-  offSetObj["top"]  = elemRect.top - bodyRect.top;
-  offSetObj["left"]  = elemRect.left - bodyRect.left;
-  offSetObj["right"]  = Math.abs(elemRect.right - bodyRect.right);
-  offSetObj["bottom"]  = Math.abs(elemRect.bottom - bodyRect.bottom);
-  offSetObj["parHeight"] = bodyRect.height;
-  offSetObj["parWidth"] = bodyRect.width;
-  offSetObj["chiWidth"] = elemRect.width;
-  offSetObj["chiHeight"] = elemRect.height;
-
-
- return offSetObj;
-}
+};
