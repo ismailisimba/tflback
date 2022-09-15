@@ -552,7 +552,7 @@ img.afterlife{
 .editpicsmom{
     display: none;
     position: relative;
-    background-color: red;
+    background-color: transparent;
     flex-flow: row;
     flex-wrap: wrap;
     flex-basis: 3;
@@ -564,8 +564,8 @@ img.afterlife{
     min-height: 108px;
 }
 .editpics{
-    width: 120px;
-    height: 96px;
+    width: 96%;
+    height: 96%;
     position: relative;
     padding: 3px 4.5px;
     margin: 3px 5px;
@@ -578,12 +578,37 @@ img.afterlife{
     cursor: move;
 }
 
-.editpics.over {
+.editpics2{
+    width: 120px;
+    height: 96px;
+    position: relative;
+    padding: 3px 4.5px;
+    margin: 3px 5px;
+    box-sizing: border-box;
+    margin-bottom: 9px;
+    cursor: move;
+}
+
+#clearpics{
+    margin-bottom: 6px;
+    font-size: 13px;
+    padding: 3px 5px;
+    border: 0.69px dotted black;
+    cursor: pointer;
+}
+
+#clearpics:hover{
+    background-color: #284185;
+    color: white;
+}
+
+.editpics.over,.editpics2:hover {
     border: 3px dotted #E2BF14;
   }
 
 #pictureuploads{
     width:100% !important;
+    margin-bottom: 24px !important;
     padding-left: 36% !important;
     text-align: center !important;
     align-items: center !important;

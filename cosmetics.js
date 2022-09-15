@@ -31,9 +31,16 @@ const setStartStateOut = ()=>{
 
 const addVehicleMenuEventClicks = ()=>{
   addNewPicEditingFuncs();
+  document.querySelectorAll("#clearpics")[0].addEventListener("click",(e)=>{
+    e.preventDefault();
+    e.stopPropagation();
+    document.querySelectorAll(".editpics2").forEach(e=>{e.remove()});
+  })
   document.querySelectorAll(".actchild").forEach((e)=>{
     e.addEventListener("click",(e)=>{
+
         document.querySelectorAll(".actchild").forEach(e=>{e.classList.remove("active")});
+        document.querySelectorAll(".editpics2").forEach(e=>{e.remove()});
         e.target.classList.add("active");
       if(e.target.classList.contains("add")){
         const editPicsToRem = document.querySelectorAll(".editpics");
@@ -114,15 +121,27 @@ const   fillCars = (e)=> {
         tempEle.querySelectorAll(".prtype")[0].innerText = "TZS";
         tempEle.querySelectorAll(".checky")[0].id = car.tagsArray;
         tempEle.querySelectorAll(".checky")[0].classList.add(car.id);
+        carContainerMom.appendChild(tempEle);
         if(car.Picture1!==null&&car.Picture1!==undefined){
           //console.log("filled in pic");
           car.Picture1 = JSON.parse(car.Picture1);
           tempEle.querySelectorAll(".main")[0].src =`data:${car.Picture1.fileInfo.meme};base64,${car.Picture1.fileData}`;
         }else{
-          getPictures(car);
+          //getPictures(car);
+          if(car.newPics!==null&&car.newPics){
+            const picobj = JSON.parse(car.newPics);
+            console.log(picobj.arr);
+            const picurl = picobj.arr[picobj.arr.length-2].metadata.url;
+            const picname = picobj.arr[picobj.arr.length-2].metadata.ogname;
+            const disimg = document.getElementById(car.tagsArray).parentNode.querySelectorAll(".main")[0];
+            disimg.alt = picname;
+            disimg.src= `${picurl}`;
+            console.log(picurl);
+          }else{
+            console.log("no pics for this car/slot.")
+          }
           //console.log("didnt filled in pic");
         }
-        carContainerMom.appendChild(tempEle);
       }else if(car.Type1==="promo"){
         getPromoPicture();
       }
@@ -511,75 +530,66 @@ class cosmetics {
       const price = document.getElementById("price").value;
       const mileage = document.getElementById("mileage").value;
       const transmission = document.getElementById("transtypes").value;
-      const pictures = document.getElementById("pictureuploads").files;
-      //console.log(pictures);
+      const pictures = document.querySelectorAll(".editpics");
       const ameneties = document.getElementById("ameneties").value;
+   
+      const formData = new FormData();
+      formData.append('type', type);
+      formData.append('maker', maker);
+      formData.append('model', model);
+      formData.append('date', date);
+      formData.append('price', price);
+      formData.append('mileage', mileage);
+      formData.append('transmission', transmission);
+      formData.append('ameneties', ameneties);
+      var counter = 0;
+      pictures.forEach(p=>{
+        //var uintArray = Base64Binary.decode(base64_string);  
+        //var byteArray = Base64Binary.decodeArrayBuffer(base64_string); 
+        var style = p.currentStyle || window.getComputedStyle(p, false);
+        var url = style.backgroundImage.slice(4, -1).replace(/["']/g, "");
+        //var byteArray = Base64Binary.decode(url);
+        //byteArray = JSON.stringify({byteArray});  
+        
+        //console.log(url);
+        var name = p.dataset.ogname;
+        formData.append("image"+counter,name);
+        formData.append("imageData"+counter,url);
+        formData.append("imageMeme"+counter,p.dataset.meme);
+        counter++;
 
-      const myCarObj ={type,maker,model,date,price,mileage,transmission,pictures,ameneties};
-      myCarObj.pictures = await bundleFilesForUpload(myCarObj.pictures);
+      });
 
 
-        if(document.querySelectorAll(".add")[0].classList.contains("active")){
-          console.log(myCarObj.pictures);
-          startAnime();
-            backendServer.cosmetics.startFetch(JSON.stringify(myCarObj),"tflcarupload",(r)=>{
-            if(r["1"]==="succ");
-            console.log("login is succesful...");
-            //setStartStateIn();
-            window.location.reload();
-            })
-            
-          
-        }else{
-          const oldPics = document.querySelectorAll(".editpics");
-          const idSpan = document.querySelectorAll(".thisformid");
-            myCarObj["tagsArray"] = oldPics!==undefined&&oldPics[0].nodeType?oldPics[0].title:idSpan[0].id;
-          console.log(oldPics);
-          console.log(idSpan);
-          if(oldPics&&oldPics[0].nodeType&&myCarObj.pictures.length<=0){
-            myCarObj.pictures = [];
-            oldPics.forEach(pic=>{
-              const disPicObj = {fileInfo:{ogname:"",meme:""},fileData:""}
-              const picArr = pic.src.split(";");
-              disPicObj.fileInfo.meme = picArr[0].split(":")[1];
-              disPicObj.fileInfo.ogname = pic.alt;
-              disPicObj.fileData = picArr[1].split(",")[1];
-              myCarObj.pictures.push(disPicObj);
-            //console.log(picArr[0].split(":")[1]);
-              
-          })
-
-          startAnime();
-          console.log("reuploaded pictures");
-          console.log(myCarObj);
-          backendServer.cosmetics.startFetch(JSON.stringify(myCarObj),"tflcaredit",(r)=>{
-            window.location.reload();
-          })
-
+          if(document.querySelectorAll(".add")[0].classList.contains("active")){
+            formData.append("tagsArray","init");
+            backendServer.cosmetics.startFetch(formData,"tflcarupload",(r)=>{
+              if(r["1"]==="succ"){
+                console.log("login is succesful...");
+                //setStartStateIn();
+                window.location.reload();
+              }else{
+                window.location.reload();
+              }
+            });
 
           }else{
-            startAnime();
-            console.log("new pictures");
-            console.log(myCarObj);
-            backendServer.cosmetics.startFetch(JSON.stringify(myCarObj),"tflcaredit",(r)=>{
-              window.location.reload();
-            })        
+            formData.append("tagsArray",document.querySelectorAll(".thisformid")[0].id);
+            backendServer.cosmetics.startFetch(formData,"tflcaredit",(r)=>{
+              if(r["1"]==="succ"){
+                console.log("login is succesful...");
+                //setStartStateIn();
+                window.location.reload();
+              }else{
+                window.location.reload();
+              }
+            });
 
           }
-         
 
-        }
-      /*
-        startAnime();
-        backendServer.cosmetics.startFetch(JSON.stringify(myCarObj),"tflcarupload",(r)=>{
-        if(r["1"]==="succ");
-        console.log("login is succesful...");
-        //setStartStateIn();
-        window.location.reload();
-      })
-      */;
-  
-
+      //const myCarObj ={type,maker,model,date,price,mileage,transmission,pictures,ameneties};
+      //myCarObj.pictures = await bundleFilesForUpload(myCarObj.pictures);
+      
     }
 
     async checkForm3(e){
@@ -655,36 +665,47 @@ const addEditClicks = (e)=>{
   document.querySelectorAll(".editpicsmom")[0].querySelectorAll(".editpics").forEach(e=>e.remove());
   for(let i = 0; i< localVar.cars[0].length;i++){
     if(localVar.cars[0][i].tagsArray===id){
-      const tempArr = ["Picture1","Picture2","Picture3","Picture4","Picture5"];
-     
-      removeCheckyListeners();
-      //console.log("true");
+      
+      const picobj = JSON.parse(localVar.cars[0][i].newPics);
       document.querySelectorAll(".carmain").forEach(e=>{e.style.display="none"});
       document.querySelectorAll(".sec3")[0].style.display="flex";
       document.querySelectorAll(".checky").forEach(e=>{e.style.display="none"});
       document.getElementById("delete").style.display = "none";
 
       document.querySelectorAll(".editpicsmom")[0].style.display = "flex";
+
+
+      if(picobj!==null){
+      const tempArr = picobj.arr;
+      removeCheckyListeners();
+      console.log(picobj);
       tempArr.forEach(ele=>{
-        if(localVar.cars[0][i][ele]!==undefined&&localVar.cars[0][i][ele].length>1){
-          const picObj = JSON.parse(localVar.cars[0][i][ele]);
+        if(localVar.cars[0][i].newPics!==null&&localVar.cars[0][i].newPics.length>1){
+          const picObj = picobj;
+          const j = tempArr.indexOf(ele);
+          console.log(j);
+          console.log(picObj);
           const newPic = picCont.cloneNode(true);
-          newPic.alt = picObj.fileInfo.ogname;
-          newPic.setAttribute("data-ogname",picObj.fileInfo.ogname);
-          newPic.setAttribute("data-meme",picObj.fileInfo.meme);
-          newPic.setAttribute("draggable",true);
-          addDragy(newPic);
+          const newPicmo = document.createElement("div");
+          newPic.alt = picObj.arr[j].ogname;
+          newPic.setAttribute("data-ogname",picObj.arr[j].ogname);
+          newPic.setAttribute("data-meme",picObj.arr[j].contentType);
+          newPicmo.setAttribute("draggable",true);
+          newPicmo.className = "editpics2";
+          newPicmo.appendChild(newPic);
+          addDragy(newPicmo);
           newPic.title = localVar.cars[0][i].tagsArray;
-          document.querySelectorAll(".thisformid")[0].id = localVar.cars[0][i].tagsArray;
-          newPic.style.backgroundImage = `url(data:${picObj.fileInfo.meme};base64,${picObj.fileData})`;
-          document.querySelectorAll(".editpicsmom")[0].appendChild(newPic);
+          newPic.style.backgroundImage = `url(${picObj.arr[j].url})`;
+          document.querySelectorAll(".editpicsmom")[0].appendChild(newPicmo);
           localVar["temppics1"] = document.querySelectorAll(".editpicsmom")[0].childNodes;
           //console.log(newPic.src);
           //console.log(picObj.fileData);
         }else{
           console.log(ele+" is not available");
         }
-    })
+    })}
+
+      document.querySelectorAll(".thisformid")[0].id = localVar.cars[0][i].tagsArray;
       
       document.querySelectorAll(".editpara")[0].style.visibility = "visible";
       
@@ -963,14 +984,17 @@ parsedFile =  await toBinaryString(file);
 const insertFormPics = async (mom,pics)=>{
   await pics.forEach(pic=>{
     const nuimg = document.createElement("div");
+    const nuimmom = document.createElement("div");
     nuimg.className = "editpics";
     //put meme n ogname
     nuimg.setAttribute("data-ogname",pic.fileName);
     nuimg.setAttribute("data-meme",pic.fileMeme);
-    nuimg.setAttribute("draggable",true);
-    addDragy(nuimg);
+    nuimmom.setAttribute("draggable",true);
+    nuimmom.className = "editpics2";
+    nuimmom.appendChild(nuimg);
+    addDragy(nuimmom);
     nuimg.style.backgroundImage = `url(${pic.fileData})`;
-    mom.appendChild(nuimg);
+    mom.appendChild(nuimmom);
   })
 }
 
@@ -987,6 +1011,7 @@ const addDragy = (element) => {
 
   function handleDragEnd(e) {
     this.style.opacity = '1';
+    e.target.style.opacity = "1";
     this.classList.remove('over');
   }
 
@@ -1006,15 +1031,15 @@ const addDragy = (element) => {
   function handleDrop(e) {
     e.stopPropagation(); // stops the browser from redirecting.
     if (dragSrcEl !== this) {
-      dragSrcEl.outerHTML = this.outerHTML;
-      this.outerHTML = e.dataTransfer.getData('text/html');
-      console.log("disisruningeeh");
-      console.log(this.outerHTML);
-      console.log(dragSrcEl.outerHTML);
+      dragSrcEl.innerHTML = this.innerHTML;
+      this.innerHTML = e.dataTransfer.getData('text/html');
+      this.innerHTML = this.querySelectorAll(".editpics")[0].outerHTML;
+      dragSrcEl.style.opacity = "1";
+      this.querySelectorAll("div").forEach(d=>d.style.opacity = "1") 
+      this.querySelectorAll(".editpics")[0].style.opacity = "1";
+      console.log("drag n drop is working as deisgned...");
     }else{
-      console.log("disisruning");
-      console.log(this);
-      console.log(dragSrcEl);
+      console.log("drag n drop is having issues...");
     }
     return false;
   }
@@ -1027,3 +1052,66 @@ const addDragy = (element) => {
     element.addEventListener('drop', handleDrop);
 
 };
+
+
+
+
+var Base64Binary = {
+	_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+	
+	/* will return a  Uint8Array type */
+	decodeArrayBuffer: function(input) {
+		var bytes = (input.length/4) * 3;
+		var ab = new ArrayBuffer(bytes);
+		this.decode(input, ab);
+		
+		return ab;
+	},
+
+	removePaddingChars: function(input){
+		var lkey = this._keyStr.indexOf(input.charAt(input.length - 1));
+		if(lkey == 64){
+			return input.substring(0,input.length - 1);
+		}
+		return input;
+	},
+
+	decode: function (input, arrayBuffer) {
+		//get last chars to see if are valid
+		input = this.removePaddingChars(input);
+		input = this.removePaddingChars(input);
+
+		var bytes = parseInt((input.length / 4) * 3, 10);
+		
+		var uarray;
+		var chr1, chr2, chr3;
+		var enc1, enc2, enc3, enc4;
+		var i = 0;
+		var j = 0;
+		
+		if (arrayBuffer)
+			uarray = new Uint8Array(arrayBuffer);
+		else
+			uarray = new Uint8Array(bytes);
+		
+		input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+		
+		for (i=0; i<bytes; i+=3) {	
+			//get the 3 octects in 4 ascii chars
+			enc1 = this._keyStr.indexOf(input.charAt(j++));
+			enc2 = this._keyStr.indexOf(input.charAt(j++));
+			enc3 = this._keyStr.indexOf(input.charAt(j++));
+			enc4 = this._keyStr.indexOf(input.charAt(j++));
+	
+			chr1 = (enc1 << 2) | (enc2 >> 4);
+			chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+			chr3 = ((enc3 & 3) << 6) | enc4;
+	
+			uarray[i] = chr1;			
+			if (enc3 != 64) uarray[i+1] = chr2;
+			if (enc4 != 64) uarray[i+2] = chr3;
+		}
+	
+		return uarray;	
+	}
+}
