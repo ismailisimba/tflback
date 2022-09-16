@@ -104,6 +104,8 @@ const   fillCars = (e)=> {
     setStartStateOut();
   }else{
     const carContainer = document.querySelectorAll(".carmain")[0];
+    const promo = document.querySelectorAll(".previewofpromo")[0];
+    promo.remove();
     const carContainerMom = document.querySelectorAll(".sec2")[0].querySelectorAll(".content")[0];
     document.querySelectorAll(".carmain").forEach(e=>e.remove());
     
@@ -128,22 +130,20 @@ const   fillCars = (e)=> {
           tempEle.querySelectorAll(".main")[0].src =`data:${car.Picture1.fileInfo.meme};base64,${car.Picture1.fileData}`;
         }else{
           //getPictures(car);
-          if(car.newPics!==null&&car.newPics){
-            const picobj = JSON.parse(car.newPics);
-            console.log(picobj.arr);
-            const picurl = picobj.arr[picobj.arr.length-2].metadata.url;
-            const picname = picobj.arr[picobj.arr.length-2].metadata.ogname;
+          const picobj = JSON.parse(car.newPics);
+          if(picobj!==null&&picobj!==undefined&&picobj.arr[0]){
+            const picurl = picobj.arr[0].url;
+            const picname = picobj.arr[0].ogname;
             const disimg = document.getElementById(car.tagsArray).parentNode.querySelectorAll(".main")[0];
             disimg.alt = picname;
             disimg.src= `${picurl}`;
-            console.log(picurl);
           }else{
             console.log("no pics for this car/slot.")
           }
           //console.log("didnt filled in pic");
         }
       }else if(car.Type1==="promo"){
-        getPromoPicture();
+        fillPromoPreview(car,promo);
       }
     });
     addVehicleMenuEventClicks();
@@ -195,13 +195,7 @@ async function getPictures(car={"car":"isEmpty"}){
     
 }
 
-async function getPromoPicture(){
-  //console.log(car);   
-  await fetchingPromoPic().then((res)=>{
-    fillPromoPreview(res);
-   })
-    
-}
+
 
 
 function commaSep (n="1000000"){
@@ -271,53 +265,7 @@ async function getMyCarPics(para=""){
   }
 
 
-  async function fetchingPromoPic(){
-    const reqString = serverURL+"tflpromopic";
   
-        
-    
-      var myRequest = new Request(reqString);
-      
-    
-           
-      const returnVal = await fetch(myRequest, {
-        method: 'GET', // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // no-cors, *cors, same-origin
-        cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'omit', // include, *same-origin, omit
-        headers: {
-          //'Content-Type': 'text/txt'
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      })
-            .then(function(response) {
-              if (!response.ok) {
-                
-                throw new Error("HTTP error, status = " + response.status);
-                
-              }
-              
-              return response.text();
-            })
-            .then(function(myBlob) {
-              
-              var cloudObject = JSON.parse(myBlob);
-              //window.location.href = "./";
-              return cloudObject;
-              
-            })
-            .catch(function(error) {
-              console.log(error.message);
-            });
-    
-            
-           // document.querySelectorAll(".mycolumns")[1].innerHTML = returnVal;
-            return returnVal; 
-    
-        // tempDiv.innerHTML = Object.entries(localVar.values)[0][1][3] ;  
-    }
 
 
 
@@ -325,17 +273,64 @@ async function getMyCarPics(para=""){
 
 
 
-const fillPromoPreview = (p)=>{
-   for(let i = 0; i< localVar.cars[0].length;i++){
-    if(localVar.cars[0][i].Type1==="promo"){
-      const pic = JSON.parse(p[0][0].Picture1);
-      document.querySelectorAll(".previewofpromo")[0].querySelectorAll("h1")[0].innerText = localVar.cars[0][i].Name1;
-      document.querySelectorAll(".previewofpromo")[0].querySelectorAll("p")[0].innerText = localVar.cars[0][i].BrandType1;
-      document.querySelectorAll(".previewofpromo")[0].querySelectorAll("img")[0].src =`data:${pic.fileInfo.meme};base64,${pic.fileData}`;
-      //`data:${meme};base64,${cloudBlob}`
-      break;
-    }
+const fillPromoPreview = (p,promo)=>{
+  const ele = promo.cloneNode(true);
+  //console.log(p);
+
+  if(p.id==="published"){
+    ele.querySelectorAll(".onprom")[0].src = `./icons/on.png`;
+  }else{
+    ele.querySelectorAll(".onprom")[0].src = `./icons/off.png`;
   }
+  
+      //const pic = JSON.parse(p[0][0].Picture1);
+      //console.log(localVar.cars[0][i]);
+      ele.querySelectorAll("h1")[0].innerText = p.Name1
+      ele.querySelectorAll("p")[0].innerText = p.BrandType1
+      ele.querySelectorAll("img")[0].src = p.newPics;
+      //document.querySelectorAll(".previewofpromo")[0].querySelectorAll("h1")[0].innerText = localVar.cars[0][i].Name1;
+      //document.querySelectorAll(".previewofpromo")[0].querySelectorAll("p")[0].innerText = localVar.cars[0][i].BrandType1;
+      //document.querySelectorAll(".previewofpromo")[0].querySelectorAll("img")[0].src =``;
+      //`data:${meme};base64,${cloudBlob}`
+
+      ele.querySelectorAll(".delprom")[0].addEventListener("click",(e)=>{
+        //console.log(p);
+        startAnime();
+
+        backendServer.cosmetics.startFetch(JSON.stringify(p),"delpromo",(r)=>{
+          if(r["1"]==="succ"){
+            console.log("login is succesful...");
+            //setStartStateIn();
+            window.location.reload();
+          }else{
+            pauseForTheseSeconds(2694,()=>{
+              window.location.reload();
+            })
+          }})
+      })
+
+
+      ele.querySelectorAll(".onprom")[0].addEventListener("click",(e)=>{
+        //console.log(p);
+        startAnime();
+
+        backendServer.cosmetics.startFetch(JSON.stringify(p),"publprom",(r)=>{
+          if(r["1"]==="succ"){
+            console.log("login is succesful...");
+            //setStartStateIn();
+            window.location.reload();
+          }else{
+            pauseForTheseSeconds(2694,()=>{
+              window.location.reload();
+            })
+          }})
+      })
+
+      
+
+      document.querySelectorAll(".sec4")[0].insertBefore(ele, document.querySelectorAll(".promoform")[0]);
+    
+    
 
 }
 
@@ -563,25 +558,31 @@ class cosmetics {
 
           if(document.querySelectorAll(".add")[0].classList.contains("active")){
             formData.append("tagsArray","init");
+            startAnime();
             backendServer.cosmetics.startFetch(formData,"tflcarupload",(r)=>{
               if(r["1"]==="succ"){
                 console.log("login is succesful...");
                 //setStartStateIn();
                 window.location.reload();
               }else{
-                window.location.reload();
+                pauseForTheseSeconds(2694,()=>{
+                  window.location.reload();
+                })
               }
             });
 
           }else{
             formData.append("tagsArray",document.querySelectorAll(".thisformid")[0].id);
+            startAnime();
             backendServer.cosmetics.startFetch(formData,"tflcaredit",(r)=>{
               if(r["1"]==="succ"){
                 console.log("login is succesful...");
                 //setStartStateIn();
                 window.location.reload();
               }else{
-                window.location.reload();
+                pauseForTheseSeconds(2694,()=>{
+                  window.location.reload();
+                })
               }
             });
 
@@ -610,7 +611,9 @@ class cosmetics {
           //setStartStateIn();
           window.location.reload();
         }else{
-          window.location.reload();
+          pauseForTheseSeconds(2694,()=>{
+            window.location.reload();
+          })
         }
       });
       
@@ -623,10 +626,10 @@ class cosmetics {
       const promotit = document.getElementById("promotit").value;
       const promoword = document.getElementById("promoword").value;
       const promopic = document.getElementById("promopic").files[0];
-      const obj = {promotit,promoword,promopic};
-      //console.log(obj);
-      obj.promopic = await bundleFilesForUpload([obj.promopic]);
-      obj.promopic = obj.promopic[0];
+      const promomeme = document.getElementById("promopic").files[0].type;
+      const proname = document.getElementById("promopic").files[0].name;
+      const obj = {promotit,promoword,promomeme,proname};
+      obj.promopic = await readFileToo(promopic);
 
       console.log(JSON.stringify(obj));
       backendServer.cosmetics.startFetch(JSON.stringify(obj),"updatepromo",(r)=>{
@@ -635,7 +638,9 @@ class cosmetics {
           //setStartStateIn();
           window.location.reload();
         }else{
-          window.location.reload();
+          pauseForTheseSeconds(2694,()=>{
+            window.location.reload();
+          })
         }
       });
    
