@@ -1,6 +1,6 @@
 const picCont = document.querySelectorAll(".editpics")[0];
-const serverURL = "https://expressongoogle-jzam6yvx3q-ez.a.run.app/"
-//const serverURL = "http://127.0.0.1:8080/";
+//const serverURL = "https://expressongoogle-jzam6yvx3q-ez.a.run.app/"
+const serverURL = "http://127.0.0.1:8080/";
 //const serverURL = "https://tflgroup.co.tz/";
       picCont.remove();
 let AnImEaction = "idle";
@@ -112,6 +112,12 @@ const   fillCars = (e)=> {
     const carstoo=JSON.parse(cars);
     //console.log(carstoo);
     localVar["cars"] = [carstoo[0]];
+   if(Object.prototype.toString.call(carstoo[0]) === '[object Array]'){
+
+   }else{
+    window.location.reload();
+    //console.log(carstoo[0])
+   }
     carstoo[0].forEach(car=>{
       if(car.Type1!=="promo"){
         const tempEle = carContainer.cloneNode(true)
@@ -807,7 +813,15 @@ const checkLogin = async(s)=>{
   startAnime();
   s.startFetch(JSON.stringify({}),"checklogin",(e2)=>{
     //console.log(e2);
-    const e=JSON.parse(e2);
+
+    const e=(()=>{
+      try{
+        const r = JSON.parse(e2);
+        return r;
+      }catch(e){
+        window.location.reload();
+      }
+    })();
     
     
       if(e.cookieStatus==="none"){
