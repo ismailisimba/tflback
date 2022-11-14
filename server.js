@@ -39,6 +39,7 @@ const fetchInfoWithFilter = async (data = JSON.stringify({"def":"data"}),paraOne
         funcAfter(res);
       }).catch(e=>{
         console.log(e);
+        window.location.reload();
     })
 
 }
